@@ -28,6 +28,10 @@ class UserAdmin(auth_admin.UserAdmin):
             },
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (
+            _("Custom Fields"),
+            {"fields": ("_type", "assigned_hits", "description", "in_charge_of")},
+        ),
     )
     list_display = ["email", "name", "is_superuser"]
     search_fields = ["name"]
