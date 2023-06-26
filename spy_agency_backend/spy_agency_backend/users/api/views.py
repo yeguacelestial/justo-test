@@ -50,8 +50,53 @@ class HitViewSet(
     serializer_class = HitSerializer
     queryset = Hit.objects.all()
 
+    def create(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        user = User.objects.get(email=request.user)
+        user_type = user._type
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        match user_type:
+            case User.Types.HITMAN:
+                return Response(
+                    {
+                        "error": "Dear hitman: you can't create a new hit. Maybe ask your manager?"
+                    }
+                )
+
+            case User.Types.MANAGER:
+                pass
+
+            case User.Types.BIG_BOSS:
+                pass
+
+            case _:
+                return Response(
+                    {"error": "You are not a hitman, manager nor big boss."}
+                )
+
+        assigned_hitman = serializer.validated_data.get("assigned_hitman")
+        assigned_hitman_filter = User.objects.filter(id=assigned_hitman)
+
+        if assigned_hitman_filter.exists():
+            assigned_hitman_user = assigned_hitman_filter.first()
+
+            if assigned_hitman_user.id == user.id:
+                return Response({"error": "You can't assign the hit to yourself."})
+
+            if assigned_hitman_user.is_active:
+                pass
+            else:
+                serializer.validated_data.pop("assigned_hitman")
+
+        serializer.validated_data["created_by"] = user
+        serializer.save()
+
+        return super().create(request, *args, **kwargs)
+
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        user = User.objects.get(id=request.user)
+        user = User.objects.get(email=request.user)
         user_type = user._type
 
         match user_type:
@@ -75,8 +120,67 @@ class HitViewSet(
 
         return super().list(request, *args, **kwargs)
 
-    def update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        return super().update(request, *args, **kwargs)
+    def partial_update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        user = User.objects.get(email=request.user)
+        user_type = user._type
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            match user_type:
+                case User.Types.HITMAN:
+                    serializer.validated_data.pop("assigned_hitman")
+                    serializer.validated_data.pop("name")
+                    serializer.validated_data.pop("description")
+                    serializer.validated_data.pop("created_by")
+
+                case User.Types.MANAGER:
+                    serializer.validated_data.pop("name")
+                    serializer.validated_data.pop("description")
+                    serializer.validated_data.pop("created_by")
+
+                    assigned_hitman = serializer.validated_data.get(
+                        "assigned_hitman", False
+                    )
+                    assigned_hitman_filter = User.objects.filter(id=assigned_hitman)
+
+                    if assigned_hitman_filter.exists():
+                        assigned_hitman_user = assigned_hitman_filter.first()
+
+                        if assigned_hitman_user.is_active:
+                            pass
+                        else:
+                            serializer.validated_data.pop("assigned_hitman")
+
+                case User.Types.BIG_BOSS:
+                    serializer.validated_data.pop("name")
+                    serializer.validated_data.pop("description")
+                    serializer.validated_data.pop("created_by")
+
+                    assigned_hitman = serializer.validated_data.get(
+                        "assigned_hitman", False
+                    )
+                    assigned_hitman_filter = User.objects.filter(id=assigned_hitman)
+
+                    if assigned_hitman_filter.exists():
+                        assigned_hitman_user = assigned_hitman_filter.first()
+
+                        if assigned_hitman_user.is_active:
+                            pass
+                        else:
+                            serializer.validated_data.pop("assigned_hitman")
+
+                case _:
+                    serializer.validated_data.pop("assigned_hitman")
+                    serializer.validated_data.pop("name")
+                    serializer.validated_data.pop("description")
+                    serializer.validated_data.pop("created_by")
+                    serializer.validated_data.pop("status")
+
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["patch"])
     def bulk_update(self, request):
