@@ -1,3 +1,4 @@
+from typing import Any
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.decorators import action
@@ -7,6 +8,7 @@ from rest_framework.mixins import (
     UpdateModelMixin,
     CreateModelMixin,
 )
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -47,6 +49,34 @@ class HitViewSet(
 ):
     serializer_class = HitSerializer
     queryset = Hit.objects.all()
+
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        user = User.objects.get(id=request.user)
+        user_type = user._type
+
+        match user_type:
+            case User.Types.HITMAN:
+                queryset = self.filter_queryset(
+                    self.get_queryset().filter(assigned_hitman=user)
+                )
+                serializer = self.get_serializer(queryset, many=True)
+                return Response(serializer.data)
+
+            case User.Types.MANAGER:
+                queryset = self.filter_queryset(
+                    self.get_queryset().filter(assigned_hitman__in=user.in_charge_of)
+                )
+                serializer = self.get_serializer(queryset, many=True)
+                return Response(serializer.data)
+
+            case User.Types.BIG_BOSS:
+                serializer = self.get_serializer(queryset, many=True)
+                return Response(serializer.data)
+
+        return super().list(request, *args, **kwargs)
+
+    def update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        return super().update(request, *args, **kwargs)
 
     @action(detail=False, methods=["patch"])
     def bulk_update(self, request):
