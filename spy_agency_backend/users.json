@@ -1,0 +1,242 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$UVIyamdFN1puRGcxbzBQOWxGVjViVQ$5FmU5uTvVPpGwFrlDekPseDeR2rUSqYfko0YGocvkJw",
+      "last_login": "2023-06-25T22:31:51Z",
+      "is_superuser": true,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-25T22:31:30Z",
+      "name": "Giuseppi",
+      "email": "bigboss@email.com",
+      "_type": "BB",
+      "description": "I'm the big boss.",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$TEFBZ1VpSFE1NVZJcklVQjZQUVhxcQ$nrq3D/O5tBiE0xF3KPhBl1meWA2AyJftfezOdbI0PIo",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:34:19Z",
+      "name": "Muhammadu Braelyn",
+      "email": "hitman1@email.com",
+      "_type": "H",
+      "description": "I'm Muhammadu Braelyn.",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": [1]
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Bennett Gisilfrid",
+      "email": "hitman2@email.com",
+      "_type": "H",
+      "description": "I'm another hitman.",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Joseph from Spain",
+      "email": "hitman4@email.com",
+      "_type": "H",
+      "description": "Description for hitman 4",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 5,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Daniel from Brazil",
+      "email": "hitman5@email.com",
+      "_type": "H",
+      "description": "Description for hitman 5",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 6,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Robert from Italy",
+      "email": "hitman6@email.com",
+      "_type": "H",
+      "description": "Description for hitman 6",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 7,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Thomas from Japan",
+      "email": "hitman7@email.com",
+      "_type": "H",
+      "description": "Description for hitman 7",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 8,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Michael from Mexico",
+      "email": "hitman8@email.com",
+      "_type": "H",
+      "description": "Description for hitman 8",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 9,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "John Wick",
+      "email": "johnwick@continental.com",
+      "_type": "H",
+      "description": "The Baba Yaga.",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 10,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Arthur Fleck",
+      "email": "arthurfleck@newyork.com",
+      "_type": "M",
+      "description": "The Joker.",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 11,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Scarecrow",
+      "email": "scarecrow@scarecrow.com",
+      "_type": "M",
+      "description": "The Scarecrow.",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 12,
+    "fields": {
+      "password": "argon2$argon2id$v=19$m=102400,t=2,p=8$YnliMEVXUFB0OUFxalBOQTI3cWx4Yg$u+7p+bxDmrFyaS/jkLeG3mSt/q7dQSLt6RiOQhy3BD4",
+      "last_login": null,
+      "is_superuser": false,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-26T00:35:38Z",
+      "name": "Cobblepot",
+      "email": "cobblepot@newyork.com",
+      "_type": "M",
+      "description": "The Pinguin.",
+      "groups": [],
+      "user_permissions": [],
+      "assigned_hits": [],
+      "in_charge_of": []
+    }
+  }
+]
