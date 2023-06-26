@@ -10,7 +10,9 @@ from rest_framework.mixins import (
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .serializers import UserSerializer
+from .serializers import UserSerializer, HitSerializer
+
+from spy_agency_backend.users.models import Hit
 
 User = get_user_model()
 
@@ -34,3 +36,14 @@ class UserViewSet(
     def me(self, request):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+class HitViewSet(
+    RetrieveModelMixin,
+    ListModelMixin,
+    UpdateModelMixin,
+    CreateModelMixin,
+    GenericViewSet,
+):
+    serializer_class = HitSerializer
+    queryset = Hit.objects.all()
