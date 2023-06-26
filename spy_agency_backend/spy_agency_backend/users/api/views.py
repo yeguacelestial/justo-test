@@ -47,3 +47,12 @@ class HitViewSet(
 ):
     serializer_class = HitSerializer
     queryset = Hit.objects.all()
+
+    @action(detail=False, methods=["patch"])
+    def bulk_update(self, request):
+        hits = request.data.get("hits", [])
+        serializer = self.get_serializer(data=hits, many=True)
+        serializer.is_valid(raise_exception=True)
+        updated_hits = serializer.save()
+
+        return Response({"updated_hits": serializer.data})
