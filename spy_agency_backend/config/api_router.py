@@ -8,7 +8,7 @@ if settings.DEBUG:
 else:
     router = SimpleRouter()
 
-router.register("users", UserViewSet)
+router.register("hitmen", UserViewSet)
 router.register("hits", HitViewSet)
 
 

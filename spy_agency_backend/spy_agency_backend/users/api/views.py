@@ -39,6 +39,78 @@ class UserViewSet(
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        user = User.objects.get(email=request.user)
+        user_type = user._type
+
+        match user_type:
+            case User.Types.HITMAN:
+                return Response({"error": "Unreachable for hitmen."})
+
+            case User.Types.MANAGER:
+                queryset = self.filter_queryset(
+                    self.get_queryset().filter(id__in=user.in_charge_of)
+                )
+                serializer = self.get_serializer(queryset, many=True)
+
+            case User.Types.BIG_BOSS:
+                serializer = self.get_serializer(queryset, many=True)
+
+            case _:
+                return Response({"error": "You are not part of the spy agency."})
+
+        return Response(serializer.data)
+
+    def retrieve(self, request: Request, pk, *args: Any, **kwargs: Any) -> Response:
+        user = User.objects.get(email=request.user)
+        user_type = user._type
+
+        match user_type:
+            case User.Types.HITMAN:
+                return Response({"error": "Unreachable for hitmen."})
+
+            case User.Types.MANAGER:
+                queryset = self.filter_queryset(self.get_queryset().filter(id=pk))
+                hitman = queryset.first()
+
+                if hitman.id not in user.in_charge_of:
+                    return Response({"error": "You are not in charge of this hitman."})
+                serializer = self.get_serializer(hitman)
+
+            case User.Types.BIG_BOSS:
+                queryset = self.filter_queryset(
+                    self.get_queryset().filter(id=pk)
+                ).first()
+                serializer = self.get_serializer(queryset)
+
+            case _:
+                return Response({"error": "You are not part of the spy agency."})
+
+        return Response(serializer.data)
+
+    def partial_update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        user = User.objects.get(email=request.user)
+        user_type = user._type
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            match user_type:
+                case User.Types.HITMAN:
+                    serializer.validated_data.pop("in_charge_of")
+
+                case User.Types.MANAGER:
+                    serializer.validated_data.pop("in_charge_of")
+
+                case User.Types.BIG_BOSS:
+                    pass
+                case _:
+                    return Response({"error": "You are not part of the spy agency."})
+
+        serializer.save()
+        return Response(serializer.data)
+
 
 class HitViewSet(
     RetrieveModelMixin,
@@ -178,6 +250,7 @@ class HitViewSet(
                     serializer.validated_data.pop("created_by")
                     serializer.validated_data.pop("status")
 
+            serializer.save()
             return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
