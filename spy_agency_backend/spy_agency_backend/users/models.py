@@ -1,6 +1,13 @@
 from django.contrib.auth.models import AbstractUser
-
-from django.db.models import CharField, EmailField, Model, ManyToManyField, TextChoices
+from django.db import models
+from django.db.models import (
+    CharField,
+    EmailField,
+    ForeignKey,
+    ManyToManyField,
+    Model,
+    TextChoices,
+)
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -8,7 +15,31 @@ from spy_agency_backend.users.managers import UserManager
 
 
 class Hit(Model):
-    pass
+    class States(TextChoices):
+        UNNASIGNED = "U", "Unassigned"
+        ASSIGNED = "A", "Assigned"
+        FAILED = "F", "Failed"
+        COMPLETED = "C", "Completed"
+
+    assigned_hitman = ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        related_name="assigned_hitman",
+        blank=True,
+        null=True,
+    )
+    name = CharField(_("Name of User"), blank=True, max_length=255)
+    description = CharField(_("Description"), max_length=255, default="")
+    state = CharField(
+        _("User type"), max_length=2, choices=States.choices, default=States.UNNASIGNED
+    )
+    created_by = ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        related_name="created_by",
+        blank=True,
+        null=True,
+    )
 
 
 class User(AbstractUser):
@@ -19,9 +50,9 @@ class User(AbstractUser):
     """
 
     class Types(TextChoices):
-        H = "H", "Hitman"
-        M = "M", "Manager"
-        BB = "BB", "Big Boss"
+        HITMAN = "H", "Hitman"
+        MANAGER = "M", "Manager"
+        BIG_BOSS = "BB", "Big Boss"
 
     # First and last name do not cover name patterns around the globe
     name = CharField(_("Name of User"), blank=True, max_length=255)
@@ -32,7 +63,7 @@ class User(AbstractUser):
 
     # custom fields
     _type = CharField(
-        _("User type"), max_length=2, choices=Types.choices, default=Types.H
+        _("User type"), max_length=2, choices=Types.choices, default=Types.HITMAN
     )
     assigned_hits = ManyToManyField(Hit, blank=True)
     description = CharField(_("Description"), max_length=255, default="")

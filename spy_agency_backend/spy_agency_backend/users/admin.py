@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 from spy_agency_backend.users.forms import UserAdminChangeForm, UserAdminCreationForm
 
+from spy_agency_backend.users.models import Hit
+
 User = get_user_model()
 
 
@@ -45,3 +47,23 @@ class UserAdmin(auth_admin.UserAdmin):
             },
         ),
     )
+
+
+@admin.register(Hit)
+class HitAdmin(admin.ModelAdmin):
+    list_display = ("name", "assigned_hitman", "state", "created_by")
+    list_filter = ("state", "created_by")
+    search_fields = ("name", "assigned_hitman__username", "created_by__username")
+    readonly_fields = ("created_by",)
+
+    fieldsets = (
+        (None, {"fields": ("name", "description")}),
+        ("Status", {"fields": ("state",)}),
+        ("Assignments", {"fields": ("assigned_hitman", "created_by")}),
+    )
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            # Set the created_by field when creating a new hit
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
