@@ -7,11 +7,16 @@ import { CheckIcon } from '@heroicons/react/24/outline'
 
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
+const people = [
+    { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+    // More people...
+]
+
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export const HitModal = ({ isOpen, closeModal }) => {
+export const HitmanModal = ({ isOpen, closeModal }) => {
     const cancelButtonRef = useRef(null);
 
     return (
@@ -43,19 +48,33 @@ export const HitModal = ({ isOpen, closeModal }) => {
                             <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
                                     <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                                        Create a new hit.
+                                        Create a new hitman.
                                     </h2>
                                     <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
 
                                         <form className="space-y-6" action="#" method="POST">
                                             <div>
-                                                <label htmlFor="assignedHitman" className="block text-sm font-medium leading-6 text-gray-900">
-                                                    Assigned hitman
+                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                    Name
                                                 </label>
                                                 <div className="mt-2">
                                                     <input
-                                                        id="assigned-hitman"
-                                                        name="assigned-hitman"
+                                                        id="name"
+                                                        name="name"
+                                                        type="text"
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                                    Email
+                                                </label>
+                                                <div className="mt-2">
+                                                    <input
+                                                        id="email"
+                                                        name="email"
                                                         type="text"
                                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                     />
@@ -70,27 +89,13 @@ export const HitModal = ({ isOpen, closeModal }) => {
                                                     <input
                                                         id="description"
                                                         name="description"
-                                                        type="text"
+                                                        type="textarea"
                                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                     />
                                                 </div>
                                             </div>
 
-                                            <div>
-                                                <label htmlFor="targetName" className="block text-sm font-medium leading-6 text-gray-900">
-                                                    Target name
-                                                </label>
-                                                <div className="mt-2">
-                                                    <input
-                                                        id="target-name"
-                                                        name="target-name"
-                                                        type="text"
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className='pb-24'>
+                                            <div className=''>
                                                 <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900">
                                                     Status
                                                 </label>
@@ -122,7 +127,7 @@ export const HitModal = ({ isOpen, closeModal }) => {
                                                                                 'block px-4 py-2 text-sm'
                                                                             )}
                                                                         >
-                                                                            Unassigned
+                                                                            Active
                                                                         </a>
                                                                     )}
                                                                 </Menu.Item>
@@ -135,33 +140,7 @@ export const HitModal = ({ isOpen, closeModal }) => {
                                                                                 'block px-4 py-2 text-sm'
                                                                             )}
                                                                         >
-                                                                            Assigned
-                                                                        </a>
-                                                                    )}
-                                                                </Menu.Item>
-                                                                <Menu.Item>
-                                                                    {({ active }) => (
-                                                                        <a
-                                                                            href="#"
-                                                                            className={classNames(
-                                                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                                'block px-4 py-2 text-sm'
-                                                                            )}
-                                                                        >
-                                                                            Failed
-                                                                        </a>
-                                                                    )}
-                                                                </Menu.Item>
-                                                                <Menu.Item>
-                                                                    {({ active }) => (
-                                                                        <a
-                                                                            href="#"
-                                                                            className={classNames(
-                                                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                                'block px-4 py-2 text-sm'
-                                                                            )}
-                                                                        >
-                                                                            Completed
+                                                                            Inactive
                                                                         </a>
                                                                     )}
                                                                 </Menu.Item>
@@ -169,6 +148,43 @@ export const HitModal = ({ isOpen, closeModal }) => {
                                                         </Menu.Items>
                                                     </Transition>
                                                 </Menu>
+                                            </div>
+
+                                            <div className='pb-24'>
+                                                <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900">
+                                                    In charge of
+                                                </label>
+
+                                                <div className="mt-2 flow-root">
+                                                    <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                                        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                                            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                                                                <table className="min-w-full divide-y divide-gray-300">
+                                                                    <thead className="bg-gray-50">
+                                                                        <tr>
+                                                                            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                                                Name
+                                                                            </th>
+                                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                                Email
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody className="divide-y divide-gray-200 bg-white">
+                                                                        {people.map((person) => (
+                                                                            <tr key={person.email}>
+                                                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                                                    {person.name}
+                                                                                </td>
+                                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.email}</td>
+                                                                            </tr>
+                                                                        ))}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </form>
                                         <div>
