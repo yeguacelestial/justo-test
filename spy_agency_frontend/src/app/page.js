@@ -1,8 +1,7 @@
 "use client"
 
-import 'tailwindcss/tailwind.css';
 import Link from 'next/link';
-
+import { useRouter } from 'next/navigation';
 /*
   This example requires some changes to your config:
   
@@ -18,6 +17,16 @@ import Link from 'next/link';
   ```
 */
 export default function Login() {
+    const router = useRouter();
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        // Perform form submission logic here
+
+        // Redirect to another page on success
+        router.push('/hits');
+    };
+
     return (
         <>
             {/*
@@ -42,7 +51,7 @@ export default function Login() {
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
                     <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-                        <form className="space-y-6" action="#" method="POST">
+                        <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                     Email address
