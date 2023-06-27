@@ -1,5 +1,8 @@
 "use client"
 
+import 'tailwindcss/tailwind.css';
+import Link from 'next/link';
+
 /*
   This example requires some changes to your config:
   
@@ -93,12 +96,14 @@ export default function Login() {
                             </div>
 
                             <div className="mt-6">
-                                <button
-                                    type="submit"
-                                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                >
-                                    Create a new account
-                                </button>
+                                <Link href="/registration">
+                                    <button
+                                        type="submit"
+                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    >
+                                        Create a new account
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
