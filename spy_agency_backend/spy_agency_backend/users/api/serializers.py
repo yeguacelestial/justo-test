@@ -55,7 +55,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
         if confirm_password != validated_data.get("password"):
             raise serializers.ValidationError("Passwords do not match.")
 
-        return super().create(validated_data)
+        user = super().create(validated_data)
+        user.set_password(validated_data["password"])
+        user.save()
+
+        return user
 
 
 class HitSerializer(serializers.ModelSerializer):
