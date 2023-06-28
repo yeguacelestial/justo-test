@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from "@component/Navbar"
 import { PlusIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
 import { HitModal } from '@component/HitModal';
+import EmptyState from '@component/EmptyState';
 
 
 const people = [
@@ -141,7 +142,6 @@ export default function Hits() {
     return (
         <div>
             <Navbar />
-
             <div className="px-4 sm:px-6 md:px-10 xl:px-96 py-10">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
@@ -164,76 +164,84 @@ export default function Hits() {
                         </button>
                     </div>
                 </div>
-                <div className="mt-8 flow-root">
-                    <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                            <table className="min-w-full divide-y divide-gray-300 overflow-y-scroll">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                            Assignee
-                                        </th>
-                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                            Hit
-                                        </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Description
-                                        </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Status
-                                        </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Created by
-                                        </th>
-                                        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                                            <span className="sr-only">Edit</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200 bg-white">
-                                    {hits.map((person) => (
-                                        <tr key={person.id}>
-                                            <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                                                <div className="flex items-center">
-                                                    <div className="">
-                                                        <div className="font-medium text-gray-900">{person.assigned_hitman}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                                                <div className="flex items-center">
-                                                    <div className="">
-                                                        <div className="font-medium text-gray-900">{person.name}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                <div className="text-gray-900">{person.description}</div>
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                                                    {person.state}
-                                                </span>
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{person.created_by}</td>
-                                            <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                                <button
-                                                    onClick={openModal}
-                                                    type="button"
-                                                    className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                                                >
-                                                    <PencilSquareIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                                                    Edit
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+            </div>
+
+            {
+                hits.length > 0 ? (
+                    <div className="px-4 sm:px-6 md:px-10 xl:px-96 py-10">
+                        <div className="mt-8 flow-root">
+                            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                    <table className="min-w-full divide-y divide-gray-300 overflow-y-scroll">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                                    Assignee
+                                                </th>
+                                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                                    Hit
+                                                </th>
+                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                    Description
+                                                </th>
+                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                    Status
+                                                </th>
+                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                    Created by
+                                                </th>
+                                                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                                                    <span className="sr-only">Edit</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-200 bg-white">
+                                            {hits.map((person) => (
+                                                <tr key={person.id}>
+                                                    <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
+                                                        <div className="flex items-center">
+                                                            <div className="">
+                                                                <div className="font-medium text-gray-900">{person.assigned_hitman}</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
+                                                        <div className="flex items-center">
+                                                            <div className="">
+                                                                <div className="font-medium text-gray-900">{person.name}</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                                                        <div className="text-gray-900">{person.description}</div>
+                                                    </td>
+                                                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                                                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${person.state == "Unassigned" ? "text-red-700 bg-red-50" : "text-green-700 bg-green-50"} ring-1 ring-inset ring-green-600/20`}>
+                                                            {person.state}
+                                                        </span>
+                                                    </td>
+                                                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{person.created_by}</td>
+                                                    <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                                        <button
+                                                            onClick={openModal}
+                                                            type="button"
+                                                            className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                                        >
+                                                            <PencilSquareIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                                                            Edit
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                ) : (<EmptyState label="hit" />)
+            }
+
             <HitModal isOpen={isModalOpen} closeModal={closeModal} />
         </div>
     )
