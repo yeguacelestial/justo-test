@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import Navbar from "@component/Navbar"
 import { PlusIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
-import { HitModal } from '@component/HitModal';
+import { CreateHitModal } from '@component/CreateHitModal';
 import EmptyState from '@component/EmptyState';
 
 
@@ -202,7 +202,7 @@ export default function Hits() {
                 ) : (<EmptyState label="hit" />)
             }
 
-            <HitModal isOpen={isModalOpen} closeModal={closeModal} />
+            <CreateHitModal isOpen={isModalOpen} closeModal={closeModal} />
         </div>
     )
 }

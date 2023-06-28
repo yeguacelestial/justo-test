@@ -50,16 +50,17 @@ class UserViewSet(
 
         match user_type:
             case User.Types.HITMAN:
-                return Response({"error": "Unreachable for hitmen."})
+                return Response({"error": "you can't do that!"})
 
             case User.Types.MANAGER:
-                queryset = self.filter_queryset(
-                    self.get_queryset().filter(id__in=user.in_charge_of)
+                serializer = self.get_serializer(
+                    self.queryset.filter(id__in=user.in_charge_of), many=True
                 )
-                serializer = self.get_serializer(queryset, many=True)
 
             case User.Types.BIG_BOSS:
-                serializer = self.get_serializer(queryset, many=True)
+                serializer = self.get_serializer(
+                    self.queryset.exclude(id=user.id), many=True
+                )
 
             case _:
                 return Response({"error": "You are not part of the spy agency."})
