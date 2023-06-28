@@ -68,6 +68,20 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 
 class HitSerializer(serializers.ModelSerializer):
+    state = serializers.ChoiceField(
+        choices=Hit.States.choices, source="get_state_display"
+    )
+
     class Meta:
         model = Hit
-        fields = ["assigned_hitman", "name", "description", "state", "created_by"]
+        fields = ["id", "assigned_hitman", "name", "description", "state", "created_by"]
+
+    def get_state(self, obj):
+        return obj.get__state_display()
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["assigned_hitman"] = instance.assigned_hitman.name
+        response["created_by"] = instance.created_by.name
+
+        return response

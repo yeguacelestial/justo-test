@@ -61,6 +61,8 @@ export default function Hits() {
     const [description, setDescription] = useState('')
     const [error, setError] = useState('')
 
+    const [hits, setHits] = useState([])
+
     const router = useRouter();
 
     const openModal = () => {
@@ -99,6 +101,31 @@ export default function Hits() {
         }
     }
 
+    const handleHits = async (authToken) => {
+        const url = 'http://0.0.0.0:8000/api/hits/';
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + authToken,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setHits(data)
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData?.non_field_errors[0] || 'Unknown error occurred';
+                setError(errorMessage);
+            }
+        } catch (error) {
+            console.error(error)
+            setError('An error occurred. Please try again.');
+        }
+    }
+
     useEffect(() => {
         const localAuthToken = localStorage.getItem("authToken")
         if (localAuthToken) {
@@ -106,6 +133,7 @@ export default function Hits() {
         }
 
         handleMe(authToken)
+        handleHits(authToken)
     }, [authToken])
 
     return (
@@ -158,26 +186,24 @@ export default function Hits() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 bg-white">
-                                    {people.map((person) => (
-                                        <tr key={person.email}>
+                                    {hits.map((person) => (
+                                        <tr key={person.id}>
                                             <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                                 <div className="flex items-center">
                                                     <div className="ml-4">
-                                                        <div className="font-medium text-gray-900">{person.name}</div>
-                                                        <div className="mt-1 text-gray-500">{person.email}</div>
+                                                        <div className="font-medium text-gray-900">{person.assigned_hitman}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                <div className="text-gray-900">{person.title}</div>
-                                                <div className="mt-1 text-gray-500">{person.department}</div>
+                                                <div className="text-gray-900">{person.description}</div>
                                             </td>
                                             <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                                 <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                                                    Active
+                                                    {person.state}
                                                 </span>
                                             </td>
-                                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{person.role}</td>
+                                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{person.created_by}</td>
                                             <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                                                 <button
                                                     onClick={openModal}

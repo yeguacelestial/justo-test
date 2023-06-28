@@ -31,7 +31,7 @@ class Hit(Model):
     name = CharField(_("Name of User"), blank=True, max_length=255)
     description = CharField(_("Description"), max_length=255, default="")
     state = CharField(
-        _("User type"), max_length=2, choices=States.choices, default=States.UNNASIGNED
+        _("Hit Status"), max_length=2, choices=States.choices, default=States.UNNASIGNED
     )
     created_by = ForeignKey(
         "users.User",
