@@ -1,7 +1,11 @@
 "use client"
 
-import Link from 'next/link';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import Link from 'next/link';
+import Head from 'next/head'
+
 /*
   This example requires some changes to your config:
   
@@ -17,14 +21,41 @@ import { useRouter } from 'next/navigation';
   ```
 */
 export default function Login() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
     const router = useRouter();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // Perform form submission logic here
 
-        // Redirect to another page on success
-        router.push('/hits');
+        const url = 'http://0.0.0.0:8000/auth-token/';
+        const body = {
+            username: username,
+            password: password,
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (response.ok) {
+                // Redirect to another page on success
+                router.push('/hits');
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData?.non_field_errors[0] || 'Unknown error occurred';
+                setError(errorMessage);
+            }
+        } catch (error) {
+            setError('An error occurred. Please try again.');
+        }
     };
 
     return (
@@ -37,6 +68,9 @@ export default function Login() {
           <body class="h-full">
           ```
         */}
+            <Head>
+                <title>My page title</title>
+            </Head>
             <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <img
@@ -45,7 +79,7 @@ export default function Login() {
                         alt="Continental"
                     />
                     <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        Welcome to the Continental.
+                        Welcome home, agent.
                     </h2>
                 </div>
 
@@ -64,6 +98,8 @@ export default function Login() {
                                         autoComplete="email"
                                         required
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
                                     />
                                 </div>
                             </div>
@@ -80,6 +116,8 @@ export default function Login() {
                                         autoComplete="current-password"
                                         required
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                 </div>
                             </div>
@@ -91,6 +129,10 @@ export default function Login() {
                                 >
                                     Sign in
                                 </button>
+
+                                {error && (
+                                    <div className="text-red-500 text-sm mt-2">{error}</div>
+                                )}
                             </div>
                         </form>
 
