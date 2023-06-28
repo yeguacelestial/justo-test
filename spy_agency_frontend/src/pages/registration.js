@@ -1,6 +1,10 @@
 "use client"
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import 'tailwindcss/tailwind.css';
 import Link from 'next/link';
+import Head from 'next/head';
 
 /*
   This example requires some changes to your config:
@@ -17,6 +21,49 @@ import Link from 'next/link';
   ```
 */
 export default function Registration() {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const router = useRouter();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const url = 'http://0.0.0.0:8000/api/hitmen/';
+        const body = {
+            name,
+            email,
+            password,
+            confirm_password: confirmPassword,
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (response.ok) {
+                // Registration successful, redirect to another page
+                router.push('/');
+
+            } else {
+                const errorData = await response.json();
+                const errorMessage = Object.values(errorData)[0] || 'Unknown error occurred';
+                setError(errorMessage);
+            }
+        } catch (error) {
+            setError('An error occurred. Please try again.');
+        }
+    };
+
+
     return (
         <>
             {/*
@@ -27,6 +74,9 @@ export default function Registration() {
           <body class="h-full">
           ```
         */}
+            <Head>
+                <title>Create a new account | Spy Agency</title>
+            </Head>
             <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <img
@@ -41,7 +91,25 @@ export default function Registration() {
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
                     <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-                        <form className="space-y-6" action="#" method="POST">
+                        <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
+                            <div>
+                                <label htmlFor="hitmanName" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Full name
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="hitmanName"
+                                        name="hitmanName"
+                                        type="text"
+                                        required
+                                        placeholder='Enter your name here'
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                     Email address
@@ -53,7 +121,10 @@ export default function Registration() {
                                         type="email"
                                         autoComplete="email"
                                         required
+                                        placeholder='name@email.com'
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </div>
                             </div>
@@ -69,27 +140,35 @@ export default function Registration() {
                                         type="password"
                                         autoComplete="current-password"
                                         required
+                                        placeholder='*****'
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                <label htmlFor="confirmPassword" className="block text-sm font-medium leading-6 text-gray-900">
                                     Confirm password
                                 </label>
                                 <div className="mt-2">
                                     <input
-                                        id="password"
-                                        name="password"
+                                        id="confirmPassword"
+                                        name="confirmPassword"
                                         type="password"
                                         autoComplete="current-password"
                                         required
+                                        placeholder='*****'
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
                                     />
                                 </div>
                             </div>
-
+                            {error && (
+                                <div className="text-red-500 mt-2">{error}</div>
+                            )}
                             <div>
                                 <button
                                     type="submit"
