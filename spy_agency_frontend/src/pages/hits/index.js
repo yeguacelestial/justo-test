@@ -130,6 +130,8 @@ export default function Hits() {
         const localAuthToken = localStorage.getItem("authToken")
         if (localAuthToken) {
             setAuthToken(localAuthToken)
+        } else {
+            router.push("/notfound")
         }
 
         handleMe(authToken)
@@ -169,7 +171,10 @@ export default function Hits() {
                                 <thead>
                                     <tr>
                                         <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                            Assigned hitman
+                                            Assignee
+                                        </th>
+                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                            Hit
                                         </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Description
@@ -190,8 +195,15 @@ export default function Hits() {
                                         <tr key={person.id}>
                                             <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                                 <div className="flex items-center">
-                                                    <div className="ml-4">
+                                                    <div className="">
                                                         <div className="font-medium text-gray-900">{person.assigned_hitman}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
+                                                <div className="flex items-center">
+                                                    <div className="">
+                                                        <div className="font-medium text-gray-900">{person.name}</div>
                                                     </div>
                                                 </div>
                                             </td>
