@@ -54,12 +54,16 @@ class UserViewSet(
 
             case User.Types.MANAGER:
                 serializer = self.get_serializer(
-                    self.queryset.filter(id__in=user.in_charge_of), many=True
+                    self.queryset.exclude(id__in=[1, user.id]).filter(
+                        id__in=user.in_charge_of, is_active=True
+                    ),
+                    many=True,
                 )
 
             case User.Types.BIG_BOSS:
                 serializer = self.get_serializer(
-                    self.queryset.exclude(id=user.id), many=True
+                    self.queryset.exclude(id=user.id).filter(is_active=True),
+                    many=True,
                 )
 
             case _:

@@ -14,10 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
         choices=User.Types.choices, source="get__type_display"
     )
     description = serializers.CharField()
+    is_active = serializers.BooleanField()
 
     class Meta:
         model = User
         fields = [
+            "id",
             "name",
             "is_active",
             "email",

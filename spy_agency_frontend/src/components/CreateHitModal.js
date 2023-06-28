@@ -1,19 +1,55 @@
 "use client"
 import 'tailwindcss/tailwind.css';
 
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Menu, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import DropdownSelect from './DropdownSelect';
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
 
 export const CreateHitModal = ({ isOpen, closeModal }) => {
     const cancelButtonRef = useRef(null);
+
+    const [authToken, setAuthToken] = useState('')
+    const [hitmen, setHitmen] = useState([])
+
+    const [error, setError] = useState()
+
+    const handleHitmen = async (authToken) => {
+        const url = 'http://0.0.0.0:8000/api/hitmen/';
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + authToken,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setHitmen(data)
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData?.non_field_errors[0] || 'Unknown error occurred';
+                setError(errorMessage);
+            }
+        } catch (error) {
+            console.error(error)
+            setError('An error occurred. Please try again.');
+        }
+    }
+
+    useEffect(() => {
+        const localAuthToken = localStorage.getItem("authToken")
+        if (localAuthToken) {
+            setAuthToken(localAuthToken)
+        }
+
+        handleHitmen(authToken)
+    }, [authToken, hitmen])
 
     return (
         <Transition.Root show={isOpen} as={Fragment}>
@@ -50,7 +86,7 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
 
                                         <form className="space-y-6" action="#" method="POST">
                                             <div className="mt-2">
-                                                <DropdownSelect label="Assignee" />
+                                                <DropdownSelect label="Assignee" options={hitmen} />
                                             </div>
 
                                             <div>
