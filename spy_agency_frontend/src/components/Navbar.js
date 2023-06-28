@@ -1,9 +1,11 @@
 "use client"
 import 'tailwindcss/tailwind.css';
 
-import { Fragment } from 'react'
+import { Fragment, useContext } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
+
+import TokenContext from '@component/TokenContext';
 
 const user = {
     name: 'John Wick',
@@ -15,15 +17,19 @@ const navigation = [
     { name: 'Hits', href: 'hits', current: true },
     { name: 'Hitmen', href: 'hitmen', current: false },
 ]
-const userNavigation = [
-    { name: 'Sign out', href: 'logout' },
-]
+
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function Navbar() {
+    const { useLogout } = useContext(TokenContext);
+    const userNavigation = [
+        { name: 'Sign out', href: 'logout', customHook: useLogout },
+    ]
+
     return (
         <Disclosure as="nav" className="bg-gray-800">
             {({ open }) => (
@@ -92,6 +98,7 @@ export default function Navbar() {
                                                                     active ? 'bg-gray-100' : '',
                                                                     'block px-4 py-2 text-sm text-gray-700'
                                                                 )}
+                                                                onClick={() => item.customHook}
                                                             >
                                                                 {item.name}
                                                             </a>
