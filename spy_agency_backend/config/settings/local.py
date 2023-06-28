@@ -11,7 +11,12 @@ SECRET_KEY = env(
     default="1moKHtawIP5ZjcTSwzTQKORIbWNn6ubEMvRtlEF6biVwbD395DS4euvUIYLpCOlq",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
+    "chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld",
+]
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -56,3 +61,4 @@ INSTALLED_APPS += ["django_extensions"]  # noqa: F405
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+CSRF_TRUSTED_ORIGINS = ["chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld"]
