@@ -10,48 +10,6 @@ import { HitModal } from '@component/HitModal';
 import EmptyState from '@component/EmptyState';
 
 
-const people = [
-
-
-    {
-        name: 'Lindsay Walton',
-        title: 'Front-end Developer',
-        department: 'Optimization',
-        email: 'lindsay.walton@example.com',
-        role: 'Member',
-        image:
-            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    {
-        name: 'Lindsay Walton',
-        title: 'Front-end Developer',
-        department: 'Optimization',
-        email: 'lindsay.walton@example.com',
-        role: 'Member',
-        image:
-            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    {
-        name: 'Lindsay Walton',
-        title: 'Front-end Developer',
-        department: 'Optimization',
-        email: 'lindsay.walton@example.com',
-        role: 'Member',
-        image:
-            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    {
-        name: 'Lindsay Walton',
-        title: 'Front-end Developer',
-        department: 'Optimization',
-        email: 'lindsay.walton@example.com',
-        role: 'Member',
-        image:
-            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    // More people...
-]
-
 export default function Hits() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [authToken, setAuthToken] = useState('')
@@ -153,16 +111,18 @@ export default function Hits() {
                             You are a {type}.
                         </p>
                     </div>
-                    <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                        <button
-                            onClick={openModal}
-                            type="button"
-                            className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                        >
-                            <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                            New Hit
-                        </button>
-                    </div>
+                    {type == "Big Boss" || "Manager" ?
+                        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                            <button
+                                onClick={openModal}
+                                type="button"
+                                className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                            >
+                                <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                                New Hit
+                            </button>
+                        </div> : <></>}
+
                 </div>
             </div>
 
