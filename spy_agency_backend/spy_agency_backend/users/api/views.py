@@ -175,26 +175,27 @@ class HitViewSet(
         user = User.objects.get(email=request.user)
         user_type = user._type
 
-        match user_type:
-            case User.Types.HITMAN:
-                queryset = self.filter_queryset(
-                    self.get_queryset().filter(assigned_hitman=user)
-                )
-                serializer = self.get_serializer(queryset, many=True)
-                return Response(serializer.data)
+        try:
+            match user_type:
+                case User.Types.HITMAN:
+                    queryset = Hit.objects.filter(assigned_hitman=user.id)
+                    serializer = self.get_serializer(queryset, many=True)
+                    return Response(serializer.data)
 
-            case User.Types.MANAGER:
-                queryset = self.filter_queryset(
-                    self.get_queryset().filter(assigned_hitman__in=user.in_charge_of)
-                )
-                serializer = self.get_serializer(queryset, many=True)
-                return Response(serializer.data)
+                case User.Types.MANAGER:
+                    queryset = Hit.objects.filter(assigned_hitman__in=user.in_charge_of)
+                    serializer = self.get_serializer(queryset, many=True)
+                    return Response(serializer.data)
 
-            case User.Types.BIG_BOSS:
-                serializer = self.get_serializer(queryset, many=True)
-                return Response(serializer.data)
+                case User.Types.BIG_BOSS:
+                    serializer = self.get_serializer(self.queryset, many=True)
+                    return Response(serializer.data)
 
-        return super().list(request, *args, **kwargs)
+                case _:
+                    return Response({"error": "who are you?"})
+
+        except User.DoesNotExist:
+            return Response({"error": "something went wrong"})
 
     def partial_update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         user = User.objects.get(email=request.user)
