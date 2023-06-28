@@ -1,12 +1,11 @@
 "use client"
+import 'tailwindcss/tailwind.css';
 
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Link from 'next/link';
-import Head from 'next/head'
 
-import TokenContext from '@component/TokenContext';
 
 /*
   This example requires some changes to your config:
@@ -28,7 +27,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const { token, setToken } = useContext(TokenContext);
+    const [authToken, setAuthToken] = useState('');
 
     const router = useRouter();
 
@@ -53,11 +52,7 @@ export default function Login() {
             if (response.ok) {
                 const data = await response.json();
                 const resToken = data.token;
-                setToken(resToken); // Set the token in the context
-
-                const savedToken = token
-                console.log(savedToken)
-                router.push('/hits'); // Redirect to another page on success
+                setAuthToken(resToken)
             } else {
                 const errorData = await response.json();
                 const errorMessage = errorData?.non_field_errors[0] || 'Unknown error occurred';
@@ -68,6 +63,19 @@ export default function Login() {
             setError('An error occurred. Please try again.');
         }
     };
+
+    useEffect(() => {
+        const localAuthToken = localStorage.getItem("authToken")
+        if (localAuthToken) {
+            router.push("/hits")
+
+        }
+
+        if (authToken) {
+            localStorage.setItem("authToken", authToken)
+            router.push("/hits")
+        }
+    }, [authToken])
 
     return (
         <>

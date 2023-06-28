@@ -8,8 +8,7 @@ export default function Logout() {
     const router = useRouter();
 
     useEffect(() => {
-        // Perform logout logic here
-        // ...
+        localStorage.clear()
 
         // Redirect to the home page
         router.push('/');

@@ -1,9 +1,11 @@
 "use client"
 import 'tailwindcss/tailwind.css';
 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 import Navbar from "@component/Navbar"
 import { PlusIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
-import { useState } from 'react';
 import { HitModal } from '@component/HitModal';
 
 
@@ -51,6 +53,9 @@ const people = [
 
 export default function Hits() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [authToken, setAuthToken] = useState('')
+
+    const router = useRouter();
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -59,6 +64,7 @@ export default function Hits() {
     const closeModal = () => {
         setIsModalOpen(false);
     };
+
 
     return (
         <div>
