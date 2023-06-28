@@ -55,6 +55,12 @@ export default function Hits() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [authToken, setAuthToken] = useState('')
 
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [type, setType] = useState('')
+    const [description, setDescription] = useState('')
+    const [error, setError] = useState('')
+
     const router = useRouter();
 
     const openModal = () => {
@@ -65,6 +71,42 @@ export default function Hits() {
         setIsModalOpen(false);
     };
 
+    const handleMe = async (authToken) => {
+        const url = 'http://0.0.0.0:8000/api/hitmen/me/';
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + authToken,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setName(data.name);
+                setEmail(data.email);
+                setType(data._type);
+                setDescription(data.description);
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData?.non_field_errors[0] || 'Unknown error occurred';
+                setError(errorMessage);
+            }
+        } catch (error) {
+            console.error(error)
+            setError('An error occurred. Please try again.');
+        }
+    }
+
+    useEffect(() => {
+        const localAuthToken = localStorage.getItem("authToken")
+        if (localAuthToken) {
+            setAuthToken(localAuthToken)
+        }
+
+        handleMe(authToken)
+    }, [authToken])
 
     return (
         <div>
@@ -73,9 +115,12 @@ export default function Hits() {
             <div className="px-4 sm:px-6 md:px-10 xl:px-96 py-10">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
-                        <h1 className="text-base font-semibold leading-6 text-gray-900">Your role: Hitman.</h1>
+                        <h1 className="text-base font-semibold leading-6 text-gray-900">Hello, {name}</h1>
                         <p className="mt-2 text-sm text-gray-700">
-                            The following is a list of hits assigned to you.
+                            Your email: {email}
+                        </p>
+                        <p className="mt-2 text-sm text-gray-700">
+                            You are a {type}.
                         </p>
                     </div>
                     <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">

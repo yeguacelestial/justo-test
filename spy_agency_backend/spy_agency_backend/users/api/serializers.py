@@ -10,7 +10,9 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-    _type = serializers.ChoiceField(choices=User.Types.choices)
+    _type = serializers.ChoiceField(
+        choices=User.Types.choices, source="get__type_display"
+    )
     description = serializers.CharField()
 
     class Meta:
@@ -37,6 +39,9 @@ class UserSerializer(serializers.ModelSerializer):
             fields["confirm_password"] = serializers.CharField(write_only=True)
 
         return fields
+
+    def get__type(self, obj):
+        return obj.get__type_display()
 
 
 class CreateUserSerializer(serializers.ModelSerializer):

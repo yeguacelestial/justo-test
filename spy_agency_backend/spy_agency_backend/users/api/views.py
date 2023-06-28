@@ -40,7 +40,8 @@ class UserViewSet(
 
     @action(detail=False)
     def me(self, request):
-        serializer = UserSerializer(request.user, context={"request": request})
+        user = User.objects.get(email=request.user)
+        serializer = self.get_serializer(user, many=False)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
