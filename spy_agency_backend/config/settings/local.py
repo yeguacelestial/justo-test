@@ -15,7 +15,6 @@ ALLOWED_HOSTS = [
     "localhost",
     "0.0.0.0",
     "127.0.0.1",
-    "chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld",
 ]
 
 # CACHES
@@ -61,4 +60,4 @@ INSTALLED_APPS += ["django_extensions"]  # noqa: F405
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-CSRF_TRUSTED_ORIGINS = ["chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld"]
+# CSRF_TRUSTED_ORIGINS = ["chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld"]
