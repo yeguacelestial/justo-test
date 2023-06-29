@@ -93,8 +93,10 @@ export default function Hits() {
             router.push("/notfound")
         }
 
-        handleMe(authToken)
-        handleHits(authToken)
+        if (authToken) {
+            handleMe(authToken)
+            handleHits(authToken)
+        }
     }, [authToken])
 
     return (
@@ -201,7 +203,7 @@ export default function Hits() {
                 ) : (<EmptyState label="hit" />)
             }
 
-            <CreateHitModal isOpen={isModalOpen} closeModal={closeModal} />
+            <CreateHitModal handleHits={handleHits(authToken)} isOpen={isModalOpen} closeModal={closeModal} />
         </div>
     )
 }

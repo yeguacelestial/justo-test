@@ -3,14 +3,12 @@ import 'tailwindcss/tailwind.css';
 
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Menu, Dialog, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation';
 
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import DropdownSelect from '@component/DropdownSelect';
 
 
-export const CreateHitModal = ({ isOpen, closeModal }) => {
+export const CreateHitModal = ({ handleHits, isOpen, closeModal }) => {
     const cancelButtonRef = useRef(null);
 
     const [authToken, setAuthToken] = useState('')
@@ -71,8 +69,9 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
                 });
 
                 if (response.ok) {
-                    // Registration successful, redirect to another page
-                    router.push('/');
+                    console.log(authToken)
+                    console.log(response.data)
+                    closeModal()
 
                 } else {
                     const errorData = await response.json();
@@ -93,7 +92,10 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
             setAuthToken(localAuthToken)
         }
 
-        handleHitmen(authToken)
+        if (authToken) {
+            handleHitmen(authToken)
+            handleHits
+        }
     }, [authToken])
 
     return (

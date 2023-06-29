@@ -192,7 +192,10 @@ class HitViewSet(
 
         hit_name = serializer.validated_data.get("name")
         if self.queryset.filter(name=hit_name).exists():
-            return Response({"error": "a hit with that name already exists"})
+            return Response(
+                data={"error": "a hit with that name already exists"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         assigned_hitman = serializer.validated_data.get("assigned_hitman")
         assigned_hitman_filter = User.objects.filter(id=assigned_hitman.id)
@@ -200,14 +203,29 @@ class HitViewSet(
         if assigned_hitman_filter.exists():
             assigned_hitman_user = assigned_hitman_filter.first()
 
+            if assigned_hitman_user.is_active == False:
+                return Response(
+                    data={"error": "hitman was excommunicado (not active anymore)"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
             if assigned_hitman_user.id == user.id:
-                return Response({"error": "You can't assign the hit to yourself."})
+                return Response(
+                    data={"error": "You can't assign the hit to yourself."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             if assigned_hitman_user.is_active == False:
-                return Response({"error": "assigned hitman is inactive"})
+                return Response(
+                    data={"error": "assigned hitman is inactive"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
         else:
-            return Response({"error": "assigned hitman does not exist."})
+            return Response(
+                data={"error": "assigned hitman does not exist."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         serializer.validated_data["created_by"] = user
         serializer.validated_data["state"] = Hit.States.ASSIGNED
@@ -232,14 +250,22 @@ class HitViewSet(
                     return Response(serializer.data)
 
                 case User.Types.BIG_BOSS:
-                    serializer = self.get_serializer(self.queryset, many=True)
+                    serializer = self.get_serializer(
+                        Hit.objects.all().order_by("id").reverse(), many=True
+                    )
                     return Response(serializer.data)
 
                 case _:
-                    return Response({"error": "who are you?"})
+                    return Response(
+                        data={"error": "who are you?"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
         except User.DoesNotExist:
-            return Response({"error": "something went wrong"})
+            return Response(
+                data={"error": "something went wrong"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
     def partial_update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         user = User.objects.get(email=request.user)
