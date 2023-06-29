@@ -24,14 +24,6 @@ export default function Hits() {
 
     const router = useRouter();
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
     const handleMe = async (authToken) => {
         const url = 'http://0.0.0.0:8000/api/hitmen/me/';
 
@@ -85,6 +77,14 @@ export default function Hits() {
         }
     }
 
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        handleHits(authToken)
+    };
     useEffect(() => {
         const localAuthToken = localStorage.getItem("authToken")
         if (localAuthToken) {
@@ -203,7 +203,7 @@ export default function Hits() {
                 ) : (<EmptyState label="hit" />)
             }
 
-            <CreateHitModal handleHits={handleHits(authToken)} isOpen={isModalOpen} closeModal={closeModal} />
+            <CreateHitModal hits={hits} handleHits={handleHits} isOpen={isModalOpen} closeModal={closeModal} />
         </div>
     )
 }

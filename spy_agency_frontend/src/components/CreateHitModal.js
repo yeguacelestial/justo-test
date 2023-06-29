@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import DropdownSelect from '@component/DropdownSelect';
 
 
-export const CreateHitModal = ({ handleHits, isOpen, closeModal }) => {
+export const CreateHitModal = ({ isOpen, closeModal }) => {
     const cancelButtonRef = useRef(null);
 
     const [authToken, setAuthToken] = useState('')
@@ -94,7 +94,6 @@ export const CreateHitModal = ({ handleHits, isOpen, closeModal }) => {
 
         if (authToken) {
             handleHitmen(authToken)
-            handleHits
         }
     }, [authToken])
 
