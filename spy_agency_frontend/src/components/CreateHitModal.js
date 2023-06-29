@@ -69,9 +69,10 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
                 });
 
                 if (response.ok) {
-                    console.log(authToken)
-                    console.log(response.data)
                     closeModal()
+                    setAsignee()
+                    setTargetName("")
+                    setTargetDescription("")
 
                 } else {
                     const errorData = await response.json();

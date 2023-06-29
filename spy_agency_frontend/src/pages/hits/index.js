@@ -85,6 +85,7 @@ export default function Hits() {
         setIsModalOpen(false);
         handleHits(authToken)
     };
+
     useEffect(() => {
         const localAuthToken = localStorage.getItem("authToken")
         if (localAuthToken) {
@@ -203,7 +204,7 @@ export default function Hits() {
                 ) : (<EmptyState label="hit" />)
             }
 
-            <CreateHitModal hits={hits} handleHits={handleHits} isOpen={isModalOpen} closeModal={closeModal} />
+            <CreateHitModal isOpen={isModalOpen} closeModal={closeModal} />
         </div>
     )
 }
