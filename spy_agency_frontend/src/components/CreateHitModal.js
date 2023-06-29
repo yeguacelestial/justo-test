@@ -4,9 +4,10 @@ import 'tailwindcss/tailwind.css';
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Menu, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation';
 
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import DropdownSelect from './DropdownSelect';
+import DropdownSelect from '@component/DropdownSelect';
 
 
 export const CreateHitModal = ({ isOpen, closeModal }) => {
@@ -20,6 +21,8 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
     const [targetDescription, setTargetDescription] = useState("")
 
     const [error, setError] = useState()
+
+    const router = useRouter()
 
     const handleHitmen = async (authToken) => {
         const url = 'http://0.0.0.0:8000/api/hitmen/active/';
@@ -42,40 +45,45 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
             }
         } catch (error) {
             console.error(error)
-            setError('[Hitmen] An error occurred. Please try again.');
+            // setError('[Hitmen] An error occurred. Please try again.');
         }
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const url = 'http://0.0.0.0:8000/api/hits/';
-        const body = {
-            "assigned_hitman": assignee ? assignee.id : "",
-            "name": targetName,
-            "description": targetDescription,
-        }
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-            });
-
-            if (response.ok) {
-                // Registration successful, redirect to another page
-                router.push('/');
-
-            } else {
-                const errorData = await response.json();
-                const errorMessage = Object.values(errorData)[0] || 'Unknown error occurred';
-                setError(errorMessage);
+        if (assignee && targetName && targetDescription) {
+            const url = 'http://0.0.0.0:8000/api/hits/';
+            const body = {
+                "assigned_hitman": assignee.id,
+                "name": targetName,
+                "description": targetDescription,
             }
-        } catch (error) {
-            setError('[Form] An error occurred. Please try again.: ' + error);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + authToken,
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                if (response.ok) {
+                    // Registration successful, redirect to another page
+                    router.push('/');
+
+                } else {
+                    const errorData = await response.json();
+                    const errorMessage = Object.values(errorData)[0] || 'Unknown error occurred';
+                    setError(errorMessage);
+                }
+            } catch (error) {
+                setError('[Form] An error occurred. Please try again.: ' + error);
+            }
+        } else {
+            setError("All fields are required.")
         }
     };
 
@@ -86,7 +94,7 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
         }
 
         handleHitmen(authToken)
-    }, [authToken, hitmen])
+    }, [authToken])
 
     return (
         <Transition.Root show={isOpen} as={Fragment}>

@@ -72,10 +72,9 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class HitSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     state = serializers.ChoiceField(
-        choices=Hit.States.choices, source="get_state_display"
+        choices=Hit.States.choices, source="get_state_display", required=False
     )
     created_by = serializers.CharField(read_only=True)
-    state = serializers.CharField(required=False)
 
     class Meta:
         model = Hit
@@ -88,5 +87,8 @@ class HitSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response["assigned_hitman"] = instance.assigned_hitman.name
         response["created_by"] = instance.created_by.name
+
+        if instance.assigned_hitman:
+            response["state"] = Hit.States.ASSIGNED.label
 
         return response

@@ -161,8 +161,12 @@ class HitViewSet(
     queryset = Hit.objects.all()
 
     def create(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        user = User.objects.get(email=request.user)
-        user_type = user._type
+        try:
+            user = User.objects.get(email=request.user)
+            user_type = user._type
+
+        except User.DoesNotExist:
+            return Response({"error": "request user does not exist"})
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -185,6 +189,10 @@ class HitViewSet(
                 return Response(
                     {"error": "You are not a hitman, manager nor big boss."}
                 )
+
+        hit_name = serializer.validated_data.get("name")
+        if self.queryset.filter(name=hit_name).exists():
+            return Response({"error": "a hit with that name already exists"})
 
         assigned_hitman = serializer.validated_data.get("assigned_hitman")
         assigned_hitman_filter = User.objects.filter(id=assigned_hitman.id)
