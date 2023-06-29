@@ -1,5 +1,11 @@
 # justo-test
 
+## Final results
+
+Just a glimpse of what you'll see if you run the project locally.
+![](justotest.gif)
+
+
 ## Used stack
 
 I used Next.js for the front-end, and Django REST with PostgreSQL for the backend. Each of these project are stored in their respective folders:
