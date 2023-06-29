@@ -3,14 +3,13 @@ import 'tailwindcss/tailwind.css';
 
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Menu, Dialog, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation';
 
 import AssigneeDropdownSelect from '@component/AssigneeDropdownSelect';
 import StatusDropdownSelect from '@component/StatusDropdownSelect';
 
 
-export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }) => {
+export const EditHitModal = ({ hitId, userType, isEditHitModalOpen, closeEditHitModal }) => {
     /* 
         HITMEN: They can only change the Hit status to Completed or Failed.
         MANAGERS: They can change the assignee for Assigned hits. For closed (Failed or Succeeded) everything is read only.
@@ -31,9 +30,19 @@ export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }
     const [error, setError] = useState()
 
     const [statusOptions, setStatusOptions] = useState([{ id: 1, type: "Completed", description: "Well done!" }, { id: 2, type: "Failed", description: "Good luck next time." }])
-    const [status, setStatus] = useState()
+    const [status, setStatus] = useState("")
 
     const router = useRouter()
+
+    const removeEmptyElements = (obj) => {
+        Object.keys(obj).forEach((key) => {
+            if (obj[key] === '' || obj[key] === null || obj[key] === undefined) {
+                delete obj[key];
+            }
+        });
+
+        return obj;
+    }
 
     const handleHitmen = async (authToken) => {
         const url = 'http://0.0.0.0:8000/api/hitmen/active/';
@@ -62,39 +71,36 @@ export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(String(status))
+        const url = `http://0.0.0.0:8000/api/hits/${hitId}/`;
+        const body = removeEmptyElements({
+            "assigned_hitman": assignee ? assignee.email : "",
+            "name": targetName,
+            "description": targetDescription,
+            "state": String(status.type).charAt(0),
+        })
 
-        if (assignee && targetName && targetDescription) {
-            const url = 'http://0.0.0.0:8000/api/hits/';
-            const body = {
-                "assigned_hitman": assignee.id,
-                "name": targetName,
-                "description": targetDescription,
+        try {
+            const response = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + authToken,
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                closeEditHitModal()
+                setError()
+            } else {
+                const errorData = await response.json();
+                const errorMessage = Object.values(errorData)[0] || 'Unknown error occurred';
+                setError(errorMessage);
             }
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Token ' + authToken,
-                    },
-                    body: JSON.stringify(body),
-                });
-
-                if (response.ok) {
-                    // Registration successful, redirect to another page
-                    router.push('/');
-
-                } else {
-                    const errorData = await response.json();
-                    const errorMessage = Object.values(errorData)[0] || 'Unknown error occurred';
-                    setError(errorMessage);
-                }
-            } catch (error) {
-                setError('[Form] An error occurred. Please try again.: ' + error);
-            }
-        } else {
-            setError("All fields are required.")
+        } catch (error) {
+            setError('[Form] An error occurred. Please try again.: ' + error);
         }
     };
 
@@ -160,7 +166,6 @@ export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }
                                                                 placeholder='Her or his name.'
                                                                 value={targetName}
                                                                 onChange={(e) => setTargetName(e.target.value)}
-                                                                required
                                                             />
                                                         </div>
                                                     </div>
@@ -178,7 +183,6 @@ export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }
                                                                 placeholder='A brief description of the target.'
                                                                 value={targetDescription}
                                                                 onChange={(e) => setTargetDescription(e.target.value)}
-                                                                required
                                                             />
                                                         </div>
                                                     </div></>

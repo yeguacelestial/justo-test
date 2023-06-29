@@ -95,16 +95,11 @@ class PartialUpdateHitSerializer(serializers.ModelSerializer):
     assigned_hitman = serializers.EmailField(required=False)
     name = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
-    state = serializers.ChoiceField(
-        choices=Hit.States.choices, source="get_state_display", required=False
-    )
+    state = serializers.ChoiceField(choices=Hit.States.choices, required=False)
 
     class Meta:
         model = Hit
         fields = ["assigned_hitman", "name", "description", "state"]
-
-    def get_state(self, obj):
-        return obj.get__state_display()
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
