@@ -12,7 +12,7 @@ import AssigneeDropdownSelect from '@component/AssigneeDropdownSelect';
 export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }) => {
     /* 
         HITMEN: They can only change the Hit status to Completed or Failed.
-        MANAGERS: They can change the assignee for Assigned hits. For closed its (Failed or Succeeded) everything is read only.
+        MANAGERS: They can change the assignee for Assigned hits. For closed (Failed or Succeeded) everything is read only.
         BIG BOSS: Same as the manager.
 
         A hit cannot be assigned to an inactive user.

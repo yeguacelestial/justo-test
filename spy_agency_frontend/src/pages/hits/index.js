@@ -190,21 +190,24 @@ export default function Hits() {
                                                         <div className="text-gray-900">{person.description}</div>
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${person.state == "Unassigned" || "Failed" ? "text-red-700 bg-red-50" : person.state == "Completed" ? "text-green-700 bg-green-50" : "text-yellow-700 bg-yellow-50"} ring-1 ring-inset ring-green-600/20`}>
+                                                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${person.state == "Completed" ? "text-green-700 bg-green-50" : person.state == "Assigned" ? "text-yellow-700 bg-yellow-50" : "text-red-700 bg-red-50"} ring-1 ring-inset ring-green-600/20`}>
                                                             {person.state}
                                                         </span>
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{person.created_by}</td>
-                                                    <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
-                                                        <button
-                                                            onClick={openEditHitModal}
-                                                            type="button"
-                                                            className="relative inline-flex items-center justify-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                                                        >
-                                                            <PencilSquareIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                                                            Edit
-                                                        </button>
-                                                    </td>
+                                                    {person.state == "Assigned" || person.state == "Unassigned" ?
+                                                        <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
+                                                            <button
+                                                                onClick={openEditHitModal}
+                                                                type="button"
+                                                                className="relative inline-flex items-center justify-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                                            >
+                                                                <PencilSquareIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                                                                Edit
+                                                            </button>
+                                                        </td>
+                                                        : <></>}
+
                                                 </tr>
                                             ))}
                                         </tbody>

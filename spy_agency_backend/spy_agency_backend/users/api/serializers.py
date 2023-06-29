@@ -88,7 +88,4 @@ class HitSerializer(serializers.ModelSerializer):
         response["assigned_hitman"] = instance.assigned_hitman.name
         response["created_by"] = instance.created_by.name
 
-        if instance.assigned_hitman:
-            response["state"] = Hit.States.ASSIGNED.label
-
         return response
