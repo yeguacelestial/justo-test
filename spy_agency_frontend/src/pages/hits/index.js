@@ -143,11 +143,11 @@ export default function Hits() {
             {
                 hits.length > 0 ? (
                     <div className="px-4 sm:px-6 md:px-10 xl:px-96 py-10">
-                        <div className="mt-8 overflow-y-scroll overflow-x-hidden max-h-[35rem]">
-                            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div className="mt-8 overflow-x-auto lg:overflow-x-hidden max-h-[35rem]">
+                            <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
                                 <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                    <table className="min-w-full divide-y divide-gray-300 overflow-y-scroll">
-                                        <thead>
+                                    <table className="min-w-full divide-y divide-gray-300">
+                                        <thead className='sticky top-0 bg-white z-10'>
                                             <tr>
                                                 <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                                                     Assignee
