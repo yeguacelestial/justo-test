@@ -3,8 +3,10 @@ import 'tailwindcss/tailwind.css';
 
 import Navbar from "@component/Navbar"
 import { PlusIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HitmanModal } from '@component/HitmanModal';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 
 const people = [
@@ -50,7 +52,45 @@ const people = [
 ]
 
 export default function Hitmen() {
+    const [authToken, setAuthToken] = useState('')
+
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [type, setType] = useState('')
+    const [description, setDescription] = useState('')
+    const [error, setError] = useState('')
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const router = useRouter();
+
+    const handleMe = async (authToken) => {
+        const url = 'http://0.0.0.0:8000/api/hitmen/me/';
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + authToken,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setName(data.name);
+                setEmail(data.email);
+                setType(data._type);
+                setDescription(data.description);
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData?.non_field_errors[0] || 'Unknown error occurred';
+                setError(errorMessage);
+            }
+        } catch (error) {
+            console.error(error)
+            setError('An error occurred. Please try again.');
+        }
+    }
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -60,9 +100,33 @@ export default function Hitmen() {
         setIsModalOpen(false);
     };
 
+    useEffect(() => {
+        const localAuthToken = localStorage.getItem("authToken")
+        if (localAuthToken) {
+            setAuthToken(localAuthToken)
+        } else {
+            router.push("/notfound")
+        }
+
+        if (authToken) {
+            handleMe(authToken)
+            // handleHits(authToken)
+        }
+    }, [authToken])
+
+    useEffect(() => {
+        if (type == "Hitman") {
+            router.push("/notfound")
+        }
+    }, [type])
+
     return (
         <div>
-            <Navbar />
+            <Head>
+                <title>Hitmen | Spy Agency</title>
+            </Head>
+
+            <Navbar userType={type} />
 
             <div className="px-4 sm:px-6 md:px-10 xl:px-96 py-10">
                 <div className="sm:flex sm:items-center">

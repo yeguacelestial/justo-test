@@ -6,27 +6,30 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation';
 
-const user = {
-    name: 'John Wick',
-    email: 'johnwick@continental.com',
-    imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
-
-const navigation = [
-    { name: 'Hits', href: 'hits', current: true },
-    { name: 'Hitmen', href: 'hitmen', current: false },
-]
-
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Navbar() {
+export default function Navbar({ userType }) {
+    const router = useRouter()
+
+    const [navigation, setNavigation] = useState([
+        { name: 'Hits', href: 'hits', current: false },
+    ])
+
     const userNavigation = [
         { name: 'Sign out', href: 'logout' },
     ]
+
+    useEffect(() => {
+        if (userType) {
+            console.log(userType)
+            userType == "Big Boss" || userType == "Manager" ?
+                setNavigation([...navigation, { name: 'Hitmen', href: 'hitmen', current: false }])
+                : null
+        }
+    }, [userType])
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
@@ -128,14 +131,8 @@ export default function Navbar() {
                                 </Disclosure.Button>
                             ))}
                         </div>
-                        <div className="border-t border-gray-700 pb-3 pt-4">
-                            <div className="flex items-center px-5 sm:px-6">
-                                <div className="ml-3">
-                                    <div className="text-base font-medium text-white">{user.name}</div>
-                                    <div className="text-sm font-medium text-gray-400">{user.email}</div>
-                                </div>
-                            </div>
-                            <div className="mt-3 space-y-1 px-2 sm:px-3">
+                        <div className="border-t border-gray-700 pb-3 pt-3">
+                            <div className="space-y-1 px-2 sm:px-3">
                                 {userNavigation.map((item) => (
                                     <Disclosure.Button
                                         key={item.name}

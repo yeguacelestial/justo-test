@@ -9,6 +9,7 @@ import { PlusIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
 import { CreateHitModal } from '@component/CreateHitModal';
 import EmptyState from '@component/EmptyState';
 import { EditHitModal } from '@component/EditHitModal';
+import Head from 'next/head';
 
 
 export default function Hits() {
@@ -118,7 +119,10 @@ export default function Hits() {
 
     return (
         <div>
-            <Navbar />
+            <Head>
+                <title>Hits | Spy Agency</title>
+            </Head>
+            <Navbar userType={type} />
             <div className="px-4 sm:px-6 md:px-10 xl:px-96 py-10">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
