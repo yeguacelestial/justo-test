@@ -6,17 +6,17 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function DropdownSelect({ label, options, selected, setSelected }) {
+export default function StatusDropdownSelect({ label, options, selected, setSelected }) {
     return (
         <Listbox value={selected} onChange={setSelected}>
             {({ open }) => (
                 <>
-                    <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Listbox.Label>
+                    <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900 mb-2">{label}</Listbox.Label>
                     <div className="relative mt-2">
                         <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
                             <span className="inline-flex w-full truncate">
-                                <span className="truncate">{selected ? selected.name : "Assign a hitman."}</span>
-                                <span className="ml-2 truncate text-gray-500">{selected ? selected.email : ""}</span>
+                                <span className="truncate">{selected ? selected.type : "Update the hit status"}</span>
+                                <span className="ml-2 truncate text-gray-500">{selected ? selected.description : ""}</span>
                             </span>
                             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                 <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -46,10 +46,10 @@ export default function DropdownSelect({ label, options, selected, setSelected }
                                             <>
                                                 <div className="flex">
                                                     <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'truncate')}>
-                                                        {option.name}
+                                                        {option.type}
                                                     </span>
                                                     <span className={classNames(active ? 'text-indigo-200' : 'text-gray-500', 'ml-2 truncate')}>
-                                                        {option.email}
+                                                        {option.description}
                                                     </span>
                                                 </div>
 

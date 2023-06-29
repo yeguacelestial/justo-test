@@ -7,6 +7,7 @@ import { CheckIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation';
 
 import AssigneeDropdownSelect from '@component/AssigneeDropdownSelect';
+import StatusDropdownSelect from '@component/StatusDropdownSelect';
 
 
 export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }) => {
@@ -29,7 +30,9 @@ export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }
 
     const [error, setError] = useState()
 
-    const [statusOptions, setStatusOptions] = useState([{ type: "Assigned" }, { type: "Completed" }, { type: "Failed" }])
+    const [statusOptions, setStatusOptions] = useState([{ id: 1, type: "Completed", description: "Well done!" }, { id: 2, type: "Failed", description: "Good luck next time." }])
+    const [status, setStatus] = useState()
+
     const router = useRouter()
 
     const handleHitmen = async (authToken) => {
@@ -138,7 +141,7 @@ export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }
                                     <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
 
                                         <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
-                                            {userType == "Big Boss" || "Manager" ? (
+                                            {userType == "Big Boss" || userType == "Manager" ? (
                                                 <>
                                                     <div className="mt-2">
                                                         <AssigneeDropdownSelect label="Assignee" options={hitmen} selected={assignee} setSelected={setAsignee} />
@@ -181,10 +184,7 @@ export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }
                                                     </div></>
                                             ) : (<></>)}
 
-
-                                            {/* <div className="mt-2">
-                                                <AssigneeDropdownSelect label="Status" options={statusOptions} selected={statusOptions[0]} setSelected={setStat} />
-                                            </div> */}
+                                            <StatusDropdownSelect label="Status" options={statusOptions} selected={status} setSelected={setStatus} />
                                             {error && (
                                                 <div className="text-red-500 mt-2">{error}</div>
                                             )}
