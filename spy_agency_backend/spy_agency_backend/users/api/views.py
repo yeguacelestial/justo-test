@@ -44,7 +44,8 @@ class UserViewSet(
         serializer = self.get_serializer(user, many=False)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    @action(detail=False)
+    def active(self, request):
         user = User.objects.get(email=request.user)
         user_type = user._type
 
@@ -63,6 +64,33 @@ class UserViewSet(
             case User.Types.BIG_BOSS:
                 serializer = self.get_serializer(
                     self.queryset.exclude(id=user.id).filter(is_active=True),
+                    many=True,
+                )
+
+            case _:
+                return Response({"error": "You are not part of the spy agency."})
+
+        return Response(serializer.data)
+
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        user = User.objects.get(email=request.user)
+        user_type = user._type
+
+        match user_type:
+            case User.Types.HITMAN:
+                return Response({"error": "you can't do that!"})
+
+            case User.Types.MANAGER:
+                serializer = self.get_serializer(
+                    self.queryset.exclude(id__in=[1, user.id]).filter(
+                        id__in=user.in_charge_of
+                    ),
+                    many=True,
+                )
+
+            case User.Types.BIG_BOSS:
+                serializer = self.get_serializer(
+                    self.queryset.exclude(id=user.id),
                     many=True,
                 )
 
@@ -159,7 +187,7 @@ class HitViewSet(
                 )
 
         assigned_hitman = serializer.validated_data.get("assigned_hitman")
-        assigned_hitman_filter = User.objects.filter(id=assigned_hitman)
+        assigned_hitman_filter = User.objects.filter(id=assigned_hitman.id)
 
         if assigned_hitman_filter.exists():
             assigned_hitman_user = assigned_hitman_filter.first()
@@ -167,15 +195,16 @@ class HitViewSet(
             if assigned_hitman_user.id == user.id:
                 return Response({"error": "You can't assign the hit to yourself."})
 
-            if assigned_hitman_user.is_active:
-                pass
-            else:
-                serializer.validated_data.pop("assigned_hitman")
+            if assigned_hitman_user.is_active == False:
+                return Response({"error": "assigned hitman is inactive"})
+
+        else:
+            return Response({"error": "assigned hitman does not exist."})
 
         serializer.validated_data["created_by"] = user
         serializer.save()
 
-        return super().create(request, *args, **kwargs)
+        return Response(serializer.data)
 
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         user = User.objects.get(email=request.user)

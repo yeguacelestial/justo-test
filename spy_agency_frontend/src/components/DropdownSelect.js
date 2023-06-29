@@ -6,9 +6,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function DropdownSelect({ label, options }) {
-    const [selected, setSelected] = useState(options[3])
-
+export default function DropdownSelect({ label, options, selected, setSelected }) {
     return (
         <Listbox value={selected} onChange={setSelected}>
             {({ open }) => (
@@ -17,7 +15,7 @@ export default function DropdownSelect({ label, options }) {
                     <div className="relative mt-2">
                         <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
                             <span className="inline-flex w-full truncate">
-                                <span className="truncate">{selected ? selected.name : ""}</span>
+                                <span className="truncate">{selected ? selected.name : "Assign a hitman."}</span>
                                 <span className="ml-2 truncate text-gray-500">{selected ? selected.email : ""}</span>
                             </span>
                             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">

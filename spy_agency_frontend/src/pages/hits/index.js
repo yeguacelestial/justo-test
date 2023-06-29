@@ -81,7 +81,7 @@ export default function Hits() {
             }
         } catch (error) {
             console.error(error)
-            setError('An error occurred. Please try again.');
+            setError('Hits: An error occurred. Please try again.');
         }
     }
 

@@ -15,10 +15,14 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
     const [authToken, setAuthToken] = useState('')
     const [hitmen, setHitmen] = useState([])
 
+    const [assignee, setAsignee] = useState()
+    const [targetName, setTargetName] = useState("")
+    const [targetDescription, setTargetDescription] = useState("")
+
     const [error, setError] = useState()
 
     const handleHitmen = async (authToken) => {
-        const url = 'http://0.0.0.0:8000/api/hitmen/';
+        const url = 'http://0.0.0.0:8000/api/hitmen/active/';
 
         try {
             const response = await fetch(url, {
@@ -38,9 +42,42 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
             }
         } catch (error) {
             console.error(error)
-            setError('An error occurred. Please try again.');
+            setError('[Hitmen] An error occurred. Please try again.');
         }
     }
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const url = 'http://0.0.0.0:8000/api/hits/';
+        const body = {
+            "assigned_hitman": assignee ? assignee.id : "",
+            "name": targetName,
+            "description": targetDescription,
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (response.ok) {
+                // Registration successful, redirect to another page
+                router.push('/');
+
+            } else {
+                const errorData = await response.json();
+                const errorMessage = Object.values(errorData)[0] || 'Unknown error occurred';
+                setError(errorMessage);
+            }
+        } catch (error) {
+            setError('[Form] An error occurred. Please try again.: ' + error);
+        }
+    };
 
     useEffect(() => {
         const localAuthToken = localStorage.getItem("authToken")
@@ -84,49 +121,59 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
                                     </h2>
                                     <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
 
-                                        <form className="space-y-6" action="#" method="POST">
+                                        <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
                                             <div className="mt-2">
-                                                <DropdownSelect label="Assignee" options={hitmen} />
-                                            </div>
-
-                                            <div>
-                                                <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
-                                                    Description
-                                                </label>
-                                                <div className="mt-2">
-                                                    <input
-                                                        id="description"
-                                                        name="description"
-                                                        type="text"
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                        placeholder='A brief description of the target.'
-                                                    />
-                                                </div>
+                                                <DropdownSelect label="Assignee" options={hitmen} selected={assignee} setSelected={setAsignee} />
                                             </div>
 
                                             <div>
                                                 <label htmlFor="targetName" className="block text-sm font-medium leading-6 text-gray-900">
                                                     Target name
                                                 </label>
-                                                <div className="mt-2 mb-20">
+                                                <div className="mt-2">
                                                     <input
                                                         id="target-name"
                                                         name="target-name"
                                                         type="text"
                                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                         placeholder='Her or his name.'
+                                                        value={targetName}
+                                                        onChange={(e) => setTargetName(e.target.value)}
+                                                        required
                                                     />
                                                 </div>
                                             </div>
+
+                                            <div>
+                                                <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
+                                                    Description
+                                                </label>
+                                                <div className="mt-2 mb-20">
+                                                    <input
+                                                        id="description"
+                                                        name="description"
+                                                        type="text"
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                        placeholder='A brief description of the target.'
+                                                        value={targetDescription}
+                                                        onChange={(e) => setTargetDescription(e.target.value)}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                            {error && (
+                                                <div className="text-red-500 mt-2">{error}</div>
+                                            )}
+                                            <div>
+                                                <button
+                                                    type="submit"
+                                                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                >
+                                                    Create hit
+                                                </button>
+                                            </div>
                                         </form>
-                                        <div>
-                                            <button
-                                                type="submit"
-                                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                            >
-                                                Create
-                                            </button>
-                                        </div>
+
                                     </div>
                                 </div>
                             </Dialog.Panel>

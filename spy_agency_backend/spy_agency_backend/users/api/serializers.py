@@ -70,9 +70,12 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 
 class HitSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     state = serializers.ChoiceField(
         choices=Hit.States.choices, source="get_state_display"
     )
+    created_by = serializers.CharField(read_only=True)
+    state = serializers.CharField(required=False)
 
     class Meta:
         model = Hit
