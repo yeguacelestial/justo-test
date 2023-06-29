@@ -149,7 +149,7 @@ export default function Hits() {
                                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                                     Created by
                                                 </th>
-                                                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                                                <th scope="col" className="relative text-left py-3.5 pr-4 sm:pr-0">
                                                     <span className="sr-only">Edit</span>
                                                 </th>
                                             </tr>
@@ -180,11 +180,11 @@ export default function Hits() {
                                                         </span>
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{person.created_by}</td>
-                                                    <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                                    <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
                                                         <button
                                                             onClick={openModal}
                                                             type="button"
-                                                            className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                                            className="relative inline-flex items-center justify-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                                                         >
                                                             <PencilSquareIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
                                                             Edit

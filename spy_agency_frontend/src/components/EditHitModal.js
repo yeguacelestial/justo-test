@@ -6,11 +6,10 @@ import { Menu, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation';
 
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import DropdownSelect from '@component/DropdownSelect';
 
 
-export const CreateHitModal = ({ isOpen, closeModal }) => {
+export const EditHitModal = ({ isOpen, closeModal }) => {
     const cancelButtonRef = useRef(null);
 
     const [authToken, setAuthToken] = useState('')
