@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import DropdownSelect from '@component/DropdownSelect';
 
 
-export const CreateHitModal = ({ isOpen, closeModal }) => {
+export const CreateHitModal = ({ isCreateHitModalOpen, closeCreateHitModal }) => {
     const cancelButtonRef = useRef(null);
 
     const [authToken, setAuthToken] = useState('')
@@ -19,8 +19,6 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
     const [targetDescription, setTargetDescription] = useState("")
 
     const [error, setError] = useState()
-
-    const router = useRouter()
 
     const handleHitmen = async (authToken) => {
         const url = 'http://0.0.0.0:8000/api/hitmen/active/';
@@ -69,7 +67,7 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
                 });
 
                 if (response.ok) {
-                    closeModal()
+                    closeCreateHitModal()
                     setAsignee()
                     setTargetName("")
                     setTargetDescription("")
@@ -99,8 +97,8 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
     }, [authToken])
 
     return (
-        <Transition.Root show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={closeModal}>
+        <Transition.Root show={isCreateHitModalOpen} as={Fragment}>
+            <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={closeCreateHitModal}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -178,7 +176,7 @@ export const CreateHitModal = ({ isOpen, closeModal }) => {
                                                 <button
                                                     type="submit"
                                                     className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                                    onSubmit={closeModal}
+                                                    onSubmit={closeCreateHitModal}
                                                 >
                                                     Create hit
                                                 </button>

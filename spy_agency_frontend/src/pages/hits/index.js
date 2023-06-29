@@ -11,7 +11,7 @@ import EmptyState from '@component/EmptyState';
 
 
 export default function Hits() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCreateHitModalOpen, setIsModalOpen] = useState(false);
     const [authToken, setAuthToken] = useState('')
 
     const [name, setName] = useState('')
@@ -81,7 +81,7 @@ export default function Hits() {
         setIsModalOpen(true);
     };
 
-    const closeModal = () => {
+    const closeCreateHitModal = () => {
         setIsModalOpen(false);
         handleHits(authToken)
     };
@@ -204,7 +204,7 @@ export default function Hits() {
                 ) : (<EmptyState label="hit" />)
             }
 
-            <CreateHitModal isOpen={isModalOpen} closeModal={closeModal} />
+            <CreateHitModal isCreateHitModalOpen={isCreateHitModalOpen} closeCreateHitModal={closeCreateHitModal} />
         </div>
     )
 }
