@@ -8,10 +8,13 @@ import Navbar from "@component/Navbar"
 import { PlusIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
 import { CreateHitModal } from '@component/CreateHitModal';
 import EmptyState from '@component/EmptyState';
+import { EditHitModal } from '@component/EditHitModal';
 
 
 export default function Hits() {
-    const [isCreateHitModalOpen, setIsModalOpen] = useState(false);
+    const [isCreateHitModalOpen, setIsCreateHitModalOpen] = useState(false);
+    const [isEditHitModalOpen, setIsEditHitModalOpen] = useState(false);
+
     const [authToken, setAuthToken] = useState('')
 
     const [name, setName] = useState('')
@@ -77,12 +80,21 @@ export default function Hits() {
         }
     }
 
-    const openModal = () => {
-        setIsModalOpen(true);
+    const openCreateHitModal = () => {
+        setIsCreateHitModalOpen(true);
     };
 
     const closeCreateHitModal = () => {
-        setIsModalOpen(false);
+        setIsCreateHitModalOpen(false);
+        handleHits(authToken)
+    };
+
+    const openEditHitModal = () => {
+        setIsEditHitModalOpen(true);
+    };
+
+    const closeEditHitModal = () => {
+        setIsEditHitModalOpen(false);
         handleHits(authToken)
     };
 
@@ -116,7 +128,7 @@ export default function Hits() {
                     </div>
                     <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none" hidden={type == "Big Boss" || type == "Manager" ? false : true}>
                         <button
-                            onClick={openModal}
+                            onClick={openCreateHitModal}
                             type="button"
                             className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                         >
@@ -178,14 +190,14 @@ export default function Hits() {
                                                         <div className="text-gray-900">{person.description}</div>
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${person.state == "Unassigned" ? "text-red-700 bg-red-50" : "text-green-700 bg-green-50"} ring-1 ring-inset ring-green-600/20`}>
+                                                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${person.state == "Unassigned" || "Failed" ? "text-red-700 bg-red-50" : person.state == "Completed" ? "text-green-700 bg-green-50" : "text-yellow-700 bg-yellow-50"} ring-1 ring-inset ring-green-600/20`}>
                                                             {person.state}
                                                         </span>
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{person.created_by}</td>
                                                     <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
                                                         <button
-                                                            onClick={openModal}
+                                                            onClick={openEditHitModal}
                                                             type="button"
                                                             className="relative inline-flex items-center justify-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                                                         >
@@ -205,6 +217,7 @@ export default function Hits() {
             }
 
             <CreateHitModal isCreateHitModalOpen={isCreateHitModalOpen} closeCreateHitModal={closeCreateHitModal} />
+            <EditHitModal userType={type} isEditHitModalOpen={isEditHitModalOpen} closeEditHitModal={closeEditHitModal} />
         </div>
     )
 }

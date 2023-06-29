@@ -6,10 +6,18 @@ import { Menu, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation';
 
-import DropdownSelect from '@component/DropdownSelect';
+import AssigneeDropdownSelect from '@component/AssigneeDropdownSelect';
 
 
-export const EditHitModal = ({ isOpen, closeModal }) => {
+export const EditHitModal = ({ userType, isEditHitModalOpen, closeEditHitModal }) => {
+    /* 
+        HITMEN: They can only change the Hit status to Completed or Failed.
+        MANAGERS: They can change the assignee for Assigned hits. For closed its (Failed or Succeeded) everything is read only.
+        BIG BOSS: Same as the manager.
+
+        A hit cannot be assigned to an inactive user.
+        If the assigned hitman is inactive, it should be allowed to stay as is but update other items.
+    */
     const cancelButtonRef = useRef(null);
 
     const [authToken, setAuthToken] = useState('')
@@ -21,6 +29,7 @@ export const EditHitModal = ({ isOpen, closeModal }) => {
 
     const [error, setError] = useState()
 
+    const [statusOptions, setStatusOptions] = useState([{ type: "Assigned" }, { type: "Completed" }, { type: "Failed" }])
     const router = useRouter()
 
     const handleHitmen = async (authToken) => {
@@ -96,8 +105,8 @@ export const EditHitModal = ({ isOpen, closeModal }) => {
     }, [authToken])
 
     return (
-        <Transition.Root show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={closeModal}>
+        <Transition.Root show={isEditHitModalOpen} as={Fragment}>
+            <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={closeEditHitModal}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -124,50 +133,58 @@ export const EditHitModal = ({ isOpen, closeModal }) => {
                             <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
                                     <h2 className="my-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                                        Create a new hit.
+                                        Edit a hit.
                                     </h2>
                                     <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
 
                                         <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
-                                            <div className="mt-2">
-                                                <DropdownSelect label="Assignee" options={hitmen} selected={assignee} setSelected={setAsignee} />
-                                            </div>
+                                            {userType == "Big Boss" || "Manager" ? (
+                                                <>
+                                                    <div className="mt-2">
+                                                        <AssigneeDropdownSelect label="Assignee" options={hitmen} selected={assignee} setSelected={setAsignee} />
+                                                    </div>
 
-                                            <div>
-                                                <label htmlFor="targetName" className="block text-sm font-medium leading-6 text-gray-900">
-                                                    Target name
-                                                </label>
-                                                <div className="mt-2">
-                                                    <input
-                                                        id="target-name"
-                                                        name="target-name"
-                                                        type="text"
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                        placeholder='Her or his name.'
-                                                        value={targetName}
-                                                        onChange={(e) => setTargetName(e.target.value)}
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
+                                                    <div>
+                                                        <label htmlFor="targetName" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            Hit name
+                                                        </label>
+                                                        <div className="mt-2">
+                                                            <input
+                                                                id="target-name"
+                                                                name="target-name"
+                                                                type="text"
+                                                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                placeholder='Her or his name.'
+                                                                value={targetName}
+                                                                onChange={(e) => setTargetName(e.target.value)}
+                                                                required
+                                                            />
+                                                        </div>
+                                                    </div>
 
-                                            <div>
-                                                <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
-                                                    Description
-                                                </label>
-                                                <div className="mt-2 mb-20">
-                                                    <input
-                                                        id="description"
-                                                        name="description"
-                                                        type="text"
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                        placeholder='A brief description of the target.'
-                                                        value={targetDescription}
-                                                        onChange={(e) => setTargetDescription(e.target.value)}
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
+                                                    <div>
+                                                        <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            Description
+                                                        </label>
+                                                        <div className="mt-2">
+                                                            <input
+                                                                id="description"
+                                                                name="description"
+                                                                type="text"
+                                                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                placeholder='A brief description of the target.'
+                                                                value={targetDescription}
+                                                                onChange={(e) => setTargetDescription(e.target.value)}
+                                                                required
+                                                            />
+                                                        </div>
+                                                    </div></>
+                                            ) : (<></>)}
+
+
+                                            {/* <div className="mt-2">
+                                                <AssigneeDropdownSelect label="Status" options={statusOptions} selected={statusOptions[0]} setSelected={setStat} />
+                                            </div> */}
                                             {error && (
                                                 <div className="text-red-500 mt-2">{error}</div>
                                             )}
@@ -175,9 +192,9 @@ export const EditHitModal = ({ isOpen, closeModal }) => {
                                                 <button
                                                     type="submit"
                                                     className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                                    onSubmit={closeModal}
+                                                    onSubmit={closeEditHitModal}
                                                 >
-                                                    Create hit
+                                                    Update hit
                                                 </button>
                                             </div>
                                         </form>

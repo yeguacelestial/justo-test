@@ -5,7 +5,7 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { Menu, Dialog, Transition } from '@headlessui/react'
 import { useRouter } from 'next/navigation';
 
-import DropdownSelect from '@component/DropdownSelect';
+import AssigneeDropdownSelect from '@component/AssigneeDropdownSelect';
 
 
 export const CreateHitModal = ({ isCreateHitModalOpen, closeCreateHitModal }) => {
@@ -131,7 +131,7 @@ export const CreateHitModal = ({ isCreateHitModalOpen, closeCreateHitModal }) =>
 
                                         <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
                                             <div className="mt-2">
-                                                <DropdownSelect label="Assignee" options={hitmen} selected={assignee} setSelected={setAsignee} />
+                                                <AssigneeDropdownSelect label="Assignee" options={hitmen} selected={assignee} setSelected={setAsignee} />
                                             </div>
 
                                             <div>
