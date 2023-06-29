@@ -12,7 +12,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .serializers import UserSerializer, HitSerializer, CreateUserSerializer
+from .serializers import (
+    UserSerializer,
+    HitSerializer,
+    CreateUserSerializer,
+    PartialUpdateHitSerializer,
+)
 
 from spy_agency_backend.users.models import Hit
 
@@ -157,8 +162,12 @@ class HitViewSet(
     CreateModelMixin,
     GenericViewSet,
 ):
-    serializer_class = HitSerializer
     queryset = Hit.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "partial_update":
+            return PartialUpdateHitSerializer
+        return HitSerializer
 
     def create(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         try:
@@ -277,16 +286,15 @@ class HitViewSet(
         if serializer.is_valid(raise_exception=True):
             match user_type:
                 case User.Types.HITMAN:
-                    serializer.validated_data.pop("assigned_hitman")
-                    serializer.validated_data.pop("name")
-                    serializer.validated_data.pop("description")
-                    serializer.validated_data.pop("created_by")
+                    if "state" in serializer.validated_data:
+                        pass
+                    else:
+                        return Response(
+                            data={"error": "you can only modify the hit status"},
+                            status=status.HTTP_400_BAD_REQUEST,
+                        )
 
                 case User.Types.MANAGER:
-                    serializer.validated_data.pop("name")
-                    serializer.validated_data.pop("description")
-                    serializer.validated_data.pop("created_by")
-
                     assigned_hitman = serializer.validated_data.get(
                         "assigned_hitman", False
                     )
@@ -301,30 +309,30 @@ class HitViewSet(
                             serializer.validated_data.pop("assigned_hitman")
 
                 case User.Types.BIG_BOSS:
-                    serializer.validated_data.pop("name")
-                    serializer.validated_data.pop("description")
-                    serializer.validated_data.pop("created_by")
-
                     assigned_hitman = serializer.validated_data.get(
                         "assigned_hitman", False
                     )
-                    assigned_hitman_filter = User.objects.filter(id=assigned_hitman)
+                    assigned_hitman_filter = User.objects.filter(email=assigned_hitman)
 
                     if assigned_hitman_filter.exists():
                         assigned_hitman_user = assigned_hitman_filter.first()
 
                         if assigned_hitman_user.is_active:
-                            pass
+                            serializer.validated_data[
+                                "assigned_hitman"
+                            ] = assigned_hitman_user
+
                         else:
-                            serializer.validated_data.pop("assigned_hitman")
+                            return Response(
+                                data={"error": "inactive hitman"},
+                                status=status.HTTP_400_BAD_REQUEST,
+                            )
 
                 case _:
-                    serializer.validated_data.pop("assigned_hitman")
-                    serializer.validated_data.pop("name")
-                    serializer.validated_data.pop("description")
-                    serializer.validated_data.pop("created_by")
-                    serializer.validated_data.pop("status")
-
+                    return Response(
+                        data={"error": "you are not part of the agency"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
             serializer.save()
             return Response(serializer.data)
 
