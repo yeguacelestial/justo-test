@@ -19,8 +19,8 @@ export default function EmptyState({ label }) {
                         d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
                     />
                 </svg>
-                <h3 className="mt-2 text-sm font-semibold text-gray-900">No {label}s</h3>
-                <p className="mt-1 text-sm text-gray-500">No {label}s available for you, agent!</p>
+                <h3 className="mt-2 text-sm font-semibold text-gray-900">No {label}{label.endsWith("men") ? "" : "s"}</h3>
+                <p className="mt-1 text-sm text-gray-500">No {label}{label.endsWith("men") ? "" : "s"} available for you, agent!</p>
             </div>
         </div>
     )
