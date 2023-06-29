@@ -111,17 +111,16 @@ export default function Hits() {
                             You are a {type}.
                         </p>
                     </div>
-                    {type == "Big Boss" || "Manager" ?
-                        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                            <button
-                                onClick={openModal}
-                                type="button"
-                                className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                            >
-                                <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                                New Hit
-                            </button>
-                        </div> : <></>}
+                    <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none" hidden={type == "Big Boss" || type == "Manager" ? false : true}>
+                        <button
+                            onClick={openModal}
+                            type="button"
+                            className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                        >
+                            <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                            New Hit
+                        </button>
+                    </div>
 
                 </div>
             </div>
@@ -129,7 +128,7 @@ export default function Hits() {
             {
                 hits.length > 0 ? (
                     <div className="px-4 sm:px-6 md:px-10 xl:px-96 py-10">
-                        <div className="mt-8 flow-root">
+                        <div className="mt-8 overflow-y-scroll overflow-x-hidden max-h-[35rem]">
                             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                 <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                                     <table className="min-w-full divide-y divide-gray-300 overflow-y-scroll">
@@ -161,14 +160,14 @@ export default function Hits() {
                                                     <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                                         <div className="flex items-center">
                                                             <div className="">
-                                                                <div className="font-medium text-gray-900">{person.assigned_hitman}</div>
+                                                                <div className="font-medium text-green-700">{person.assigned_hitman}</div>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                                         <div className="flex items-center">
                                                             <div className="">
-                                                                <div className="font-medium text-gray-900">{person.name}</div>
+                                                                <div className="font-medium text-red-700">{person.name}</div>
                                                             </div>
                                                         </div>
                                                     </td>
