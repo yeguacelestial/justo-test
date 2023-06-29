@@ -210,6 +210,7 @@ class HitViewSet(
             return Response({"error": "assigned hitman does not exist."})
 
         serializer.validated_data["created_by"] = user
+        serializer.validated_data["state"] = Hit.States.ASSIGNED
         serializer.save()
 
         return Response(serializer.data)
