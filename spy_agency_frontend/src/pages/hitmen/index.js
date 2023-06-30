@@ -123,7 +123,8 @@ export default function Hitmen() {
         }
     }
 
-    const openInChargeOfModal = () => {
+    const openInChargeOfModal = (hitmanId) => {
+        setInChargeOfHitmanId(hitmanId)
         setIsInChargeOfModalOpen(true);
     };
 
@@ -246,7 +247,7 @@ export default function Hitmen() {
                     </div>
                 ) : (<EmptyState label="hitmen" />)
             }
-            <InChargeOfModal requestUserType={type} hitmanId={inChargeOfHitmanId} isOpen={isInChargeOfModalOpen} closeModal={closeInChargeOfModal} />
+            <InChargeOfModal hitmanId={inChargeOfHitmanId} isOpen={isInChargeOfModalOpen} closeModal={closeInChargeOfModal} />
         </div>
     )
 }
