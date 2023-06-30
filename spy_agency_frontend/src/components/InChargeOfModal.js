@@ -8,8 +8,6 @@ import { CheckIcon } from '@heroicons/react/24/outline'
 export default function InChargeOfModal({ hitmanId, isOpen, closeModal }) {
     const cancelButtonRef = useRef(null);
 
-    const [open, setOpen] = useState(false)
-
     return (
         <Transition.Root show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={closeModal}>
@@ -22,7 +20,7 @@ export default function InChargeOfModal({ hitmanId, isOpen, closeModal }) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                    <div className="backdrop-blur-sm fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
                 </Transition.Child>
 
                 <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -56,7 +54,7 @@ export default function InChargeOfModal({ hitmanId, isOpen, closeModal }) {
                                     <button
                                         type="button"
                                         className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                        onClick={() => setOpen(false)}
+                                        onClick={closeModal}
                                     >
                                         Go back to dashboard
                                     </button>
