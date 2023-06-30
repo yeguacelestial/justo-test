@@ -3,22 +3,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import EmptyState from "./EmptyState";
 
-// const people = [
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-//     { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
-// ];
-
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
@@ -56,6 +40,64 @@ export default function InChargeOfModal({ hitmanId, isOpen, closeModal }) {
             setError('Hitmen: An error occurred. Please try again.');
         }
     }
+
+    const handleCheckboxChange = async (event, hitman) => {
+        const isChecked = event.target.checked;
+
+        const url = `http://0.0.0.0:8000/api/hitmen/${hitmanId}/`;
+        const updatedHitman = { in_charge_of: isChecked ? [hitmanId, ...hitman.in_charge_of] : hitman.in_charge_of.filter(id => id !== hitmanId) };
+
+        try {
+            const response = await fetch(url, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Token " + authToken,
+                },
+                body: JSON.stringify(updatedHitman),
+            });
+
+            if (response.ok) {
+                handleHitmen(authToken);
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData?.non_field_errors[0] || "Unknown error occurred";
+                setError(errorMessage);
+            }
+        } catch (error) {
+            console.error(error);
+            setError("An error occurred. Please try again.");
+        }
+    };
+
+    // TODO: Create a button to add a new user
+    const handleAddUser = async (user) => {
+        const url = `http://0.0.0.0:8000/api/hitmen/${hitmanId}/`;
+
+        const updatedHitman = { in_charge_of: [...user.in_charge_of, hitmanId] };
+
+        try {
+            const response = await fetch(url, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Token " + authToken,
+                },
+                body: JSON.stringify(updatedHitman),
+            });
+
+            if (response.ok) {
+                handleHitmen(authToken);
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData?.non_field_errors[0] || "Unknown error occurred";
+                setError(errorMessage);
+            }
+        } catch (error) {
+            console.error(error);
+            setError("An error occurred. Please try again.");
+        }
+    };
 
     useEffect(() => {
         const localAuthToken = localStorage.getItem("authToken")
@@ -108,7 +150,7 @@ export default function InChargeOfModal({ hitmanId, isOpen, closeModal }) {
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <div className="relative max-w-3xl w-full bg-white shadow-xl rounded-lg p-4 sm:p-6">
+                        <div className="relative max-w-5xl w-full bg-white shadow-xl rounded-lg p-4 sm:p-6">
                             <div className="overflow-x-auto lg:overflow-x-hidden max-h-[20rem] mt-8">
                                 {hitmen.length > 0 ?
                                     <table className="min-w-full border-separate border-spacing-0">
@@ -140,9 +182,9 @@ export default function InChargeOfModal({ hitmanId, isOpen, closeModal }) {
                                                 </th>
                                                 <th
                                                     scope="col"
-                                                    className="border-b border-gray-300 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
+                                                    className="border-b border-gray-300 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                                                 >
-                                                    <span className="sr-only">Edit</span>
+                                                    Assigned?
                                                 </th>
                                             </tr>
                                         </thead>
@@ -171,15 +213,23 @@ export default function InChargeOfModal({ hitmanId, isOpen, closeModal }) {
                                                         {hitman.description}
                                                     </td>
                                                     <td className={classNames("whitespace-nowrap px-3 py-4 text-sm text-gray-500")}>
-                                                        {hitman.is_active}
+                                                        {hitman.is_active ? "Active" : "Inactive"}
                                                     </td>
-                                                    <td
-                                                        className={classNames("relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium")}
-                                                    >
-                                                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                            Edit<span className="sr-only">, {hitman.name}</span>
-                                                        </a>
-                                                    </td>
+
+                                                    {hitman.is_active ? (
+                                                        <td className={classNames("relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium")}>
+                                                            <input
+                                                                type="checkbox"
+                                                                // checked={hitman.in_charge_of.includes(hitmanId)}
+                                                                checked={true}
+                                                                onChange={(event) => handleCheckboxChange(event, hitman)}
+                                                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                                            />
+                                                        </td>
+                                                    ) : (
+                                                        <></>
+                                                    )}
+
                                                 </tr>
                                             ))}
                                         </tbody>
