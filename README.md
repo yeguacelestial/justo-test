@@ -8,10 +8,8 @@ Just a glimpse of what you'll see if you run the project locally.
 
 ## Used stack
 
-I used Next.js for the front-end, and Django REST with PostgreSQL for the backend. Each of these project are stored in their respective folders:
-`spy_agency_frontend` and `spy_agency_backend`.
-
-You will find detailed instructions on how to run the projects within each folder.
+I used Next.js for the front-end, and Django REST with PostgreSQL for the backend.
+You'll find them on `spy_agency_frontend` and `spy_agency_backend` projects. Detailed instructions on how to run them within the folders README file.
 
 -----
 ## Project management
