@@ -121,9 +121,7 @@ class UserViewSet(
                 serializer = self.get_serializer(hitman)
 
             case User.Types.BIG_BOSS:
-                queryset = self.filter_queryset(
-                    self.get_queryset().filter(id=pk)
-                ).first()
+                queryset = self.queryset.get(id=pk)
                 serializer = self.get_serializer(queryset)
 
             case _:
@@ -131,11 +129,13 @@ class UserViewSet(
 
         return Response(serializer.data)
 
-    def partial_update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def partial_update(
+        self, request: Request, pk, *args: Any, **kwargs: Any
+    ) -> Response:
         user = User.objects.get(email=request.user)
         user_type = user._type
 
-        instance = self.get_object()
+        instance = self.queryset.get(id=pk)
         serializer = self.get_serializer(instance, data=request.data, partial=True)
 
         if serializer.is_valid(raise_exception=True):

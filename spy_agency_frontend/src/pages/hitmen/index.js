@@ -226,14 +226,13 @@ export default function Hitmen() {
                                                         </span>
                                                     </td>
                                                     {type == "Big Boss" ?
-                                                        <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
+                                                        <td className="relative whitespace-nowrap py-5 pl-3 pr-3 inset-x-5 text-sm font-medium sm:pr-0">
                                                             <button
                                                                 onClick={() => openInChargeOfModal(hitman.id)}
                                                                 type="button"
                                                                 className="relative inline-flex items-center justify-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                                                             >
                                                                 <UserGroupIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                                                                List
                                                             </button>
                                                         </td>
                                                         : <></>}
