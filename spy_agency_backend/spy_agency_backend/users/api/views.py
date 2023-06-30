@@ -154,6 +154,33 @@ class UserViewSet(
         serializer.save()
         return Response(serializer.data)
 
+    @action(detail=True, methods=["GET"])
+    def in_charge_of(self, request, pk=None, *args, **kwargs):
+        user = User.objects.get(email=request.user)
+        user_type = user._type
+
+        match user_type:
+            case User.Types.HITMAN:
+                return Response({"error": "you can't do that!"})
+
+            case User.Types.MANAGER:
+                return Response({"error": "you can't do that!"})
+
+            case User.Types.BIG_BOSS:
+                manager_user = User.objects.get(id=pk)
+                in_charge_of_users = User.objects.filter(
+                    id__in=manager_user.in_charge_of.all()
+                )
+                serializer = self.get_serializer(
+                    in_charge_of_users,
+                    many=True,
+                )
+
+            case _:
+                return Response({"error": "You are not part of the spy agency."})
+
+        return Response(serializer.data)
+
 
 class HitViewSet(
     RetrieveModelMixin,

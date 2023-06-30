@@ -78,19 +78,19 @@ export default function InChargeOfModal({ hitmanId, isOpen, closeModal }) {
                                                 scope="col"
                                                 className="hidden border-b border-gray-300 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                                             >
-                                                Title
+                                                Email
                                             </th>
                                             <th
                                                 scope="col"
                                                 className="hidden border-b border-gray-300 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter lg:table-cell"
                                             >
-                                                Email
+                                                Description
                                             </th>
                                             <th
                                                 scope="col"
                                                 className="border-b border-gray-300 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                                             >
-                                                Role
+                                                Status
                                             </th>
                                             <th
                                                 scope="col"

@@ -246,7 +246,7 @@ export default function Hitmen() {
                     </div>
                 ) : (<EmptyState label="hitmen" />)
             }
-            <InChargeOfModal hitmanId={inChargeOfHitmanId} isOpen={isInChargeOfModalOpen} closeModal={closeInChargeOfModal} />
+            <InChargeOfModal requestUserType={type} hitmanId={inChargeOfHitmanId} isOpen={isInChargeOfModalOpen} closeModal={closeInChargeOfModal} />
         </div>
     )
 }
